@@ -29,6 +29,7 @@ dynatrace-ai-workspace/
 | [VS Code](https://code.visualstudio.com/) | Editor with Copilot Chat |
 | [GitHub Copilot](https://github.com/features/copilot) | AI assistant (subscription required) |
 | [Node.js](https://nodejs.org/) v18+ | Required for skills installer and MCP server |
+| [dtctl](https://github.com/dynatrace-oss/dtctl) | Dynatrace CLI for notebook verification and resource management |
 | A Dynatrace environment | `https://<env>.apps.dynatrace.com` |
 
 ---
@@ -76,6 +77,20 @@ Edit `.vscode/mcp.json` and replace the placeholder URLs with your environment:
 Press `Cmd+Shift+P` → `Developer: Reload Window`
 
 Copilot will authenticate via browser SSO when you first use a prompt.
+
+### 5. Install and authenticate dtctl
+
+```bash
+# macOS — direct install (no Homebrew required)
+curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh | bash
+
+# Authenticate against your environment
+dtctl auth login --context my-env \
+  --environment "https://<your-env>.apps.dynatrace.com"
+
+# Verify
+dtctl doctor
+```
 
 ---
 
