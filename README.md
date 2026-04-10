@@ -252,12 +252,12 @@ The Dynatrace MCP server gives Copilot live API access to your environment. When
 
 ---
 
-## Optional: dtctl CLI
+## dtctl CLI
 
 [dtctl](https://github.com/dynatrace-oss/dtctl) is a kubectl-style CLI for Dynatrace that complements this workspace — giving you terminal-level access to run DQL queries, manage workflows, verify notebooks, and more.
 
 ```bash
-# macOS (direct install — no Homebrew required)
+# macOS / Linux (direct install)
 curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh | bash
 
 # Authenticate against the shared demo tenant
