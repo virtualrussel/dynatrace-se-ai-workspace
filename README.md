@@ -32,11 +32,7 @@ dynatrace-ai-workspace/
 │   └── mcp.json                  # Dynatrace MCP server configuration
 └── demos/
     └── ai-observability-demo.md  # Demo script
-```
-
----
-
-## Prerequisites
+````
 
 | Tool | Purpose |
 |---|---|
@@ -112,18 +108,15 @@ Replace `<your-tenant-id>` with your personal sprint tenant ID (e.g. `abc12345`)
 }
 ```
 
-**Step B — Update `.github/copilot-instructions.md`**
+**Step B — Update `.github/copilot-instructions.md` and `CLAUDE.md`**
 
-Find the MCP server section and update the fallback server name to match
-your tenant ID:
+Find the Environment table in both files and update the fallback server name and URL to match your tenant ID:
 
 ```
-- **Default MCP Server:** guu84124-mcp
-- **Fallback MCP Server:** <your-tenant-id>-mcp
+| **Fallback MCP server** | `<your-tenant-id>-mcp` → https://<your-tenant-id>.sprint.apps.dynatracelabs.com |
 ```
 
-Without this update, Copilot's auto-briefing will reference the original
-author's sprint server — which won't exist in your workspace.
+Both files must be updated — `copilot-instructions.md` is loaded by GitHub Copilot and `CLAUDE.md` is loaded by Claude Code. Without updating both, the fallback server will reference the original author's sprint tenant.
 
 **Step C — Authenticate dtctl**
 

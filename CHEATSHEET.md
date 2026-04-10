@@ -8,8 +8,8 @@
 
 | Task | Command |
 |------|---------|
-| **Check service health** | `@health-check [service-name]` |
-| **Troubleshoot active problem** | `@troubleshoot-problem` |
+| **Check service health** | `/health-check [service-name]` |
+| **Troubleshoot active problem** | `/troubleshoot-problem` |
 | **Create investigation notebook** | Ask: *"Create a notebook for [issue]"* |
 
 ---
@@ -19,7 +19,7 @@
 ### 1. List Active Problems (ALWAYS START HERE)
 ```dql
 fetch dt.davis.problems, from: now()-24h, to: now()
-| filter event.status == "ACTIVE"
+| filter not(dt.davis.is_duplicate) and event.status == "ACTIVE"
 | sort event.start desc
 ```
 
@@ -75,7 +75,7 @@ fetch logs, from: now()-30m, to: now()
 
 ---
 
-## ⚠️ Critical Rules (From copilot-instructions.md)
+## ⚠️ Critical Rules
 
 | Rule | Why | How |
 |------|-----|-----|
@@ -113,12 +113,12 @@ fetch logs, from: now()-30m, to: now()
 
 ---
 
-## 🎯 Standard Investigation Workflow (6 Steps)
+## 🎯 Standard Investigation Workflow (7 Steps)
 
 **Step 1: List Active Problems**
 ```dql
 fetch dt.davis.problems, from: now()-24h, to: now()
-| filter event.status == "ACTIVE"
+| filter not(dt.davis.is_duplicate) and event.status == "ACTIVE"
 | sort event.start desc
 ```
 → Extract problem ID, start time, end time, affected service
