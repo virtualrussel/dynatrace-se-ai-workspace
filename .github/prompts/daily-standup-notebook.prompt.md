@@ -1,4 +1,5 @@
 ---
+agent: agent
 description: Generate a daily standup report for JourneyService and CheckDestination, create an actionable Dynatrace notebook with embedded DQL queries and remediation steps, then verify it using dtctl.
 ---
 Run a daily standup report for JourneyService and CheckDestination using the guu84124-mcp server.
@@ -68,6 +69,3 @@ fetch dt.davis.problems, from: now()-24h
 2. Run dtctl get notebooks in the terminal to verify it appears in Dynatrace
 3. Run dtctl describe notebook "[notebook name]" to confirm the structure
 4. Share the verified URL for the team to access
-
----
-**Related skills:** dt-dql-essentials, dt-obs-services, dt-obs-problems, dt-app-notebooks, dtctl
