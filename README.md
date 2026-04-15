@@ -200,6 +200,12 @@ dtctl config set-credentials sprint-token --token <YOUR_PLATFORM_TOKEN>
 
 If OAuth fails with a keyring error (for example, `dbus-launch` not found), use the token-based method above.
 
+Both contexts are now configured. Switch between them with:
+```bash
+dtctl config use-context production
+dtctl config use-context sprint
+```
+
 ### 5. Reload VS Code
 
 Press `Cmd+Shift+P` → `Developer: Reload Window`
@@ -330,6 +336,10 @@ dtctl doctor
 dtctl get workflows
 dtctl get notebooks
 dtctl query 'fetch dt.davis.problems | filter event.status == "ACTIVE" | limit 5'
+
+# Switch between configured contexts
+dtctl config use-context production
+dtctl config use-context sprint
 ```
 
 ---
