@@ -6,9 +6,9 @@ This document explains what this workspace is, how it is built, and how the comp
 
 ## What This Is
 
-A pre-configured AI observability workspace that connects GitHub Copilot to Dynatrace — enabling natural language investigation of production systems directly from VS Code.
+A pre-configured AI observability workspace that connects GitHub Copilot or Claude Code to Dynatrace — enabling natural language investigation of production systems directly from VS Code.
 
-Instead of logging into Dynatrace, navigating dashboards, and writing queries manually, you type a slash command in Copilot Chat and receive structured, accurate, production-aware answers in seconds.
+Instead of logging into Dynatrace, navigating dashboards, and writing queries manually, you type a slash command in Copilot Chat or Claude Code and receive structured, accurate, production-aware answers in seconds.
 
 ---
 
@@ -103,14 +103,14 @@ The Model Context Protocol (MCP) server is the live data bridge between Copilot 
 Two environments are configured as named servers:
 
 ```json
-guu84124-mcp  →  https://guu84124.apps.dynatrace.com        (production)
-bon05374-mcp  →  https://bon05374.sprint.apps.dynatracelabs.com  (sprint)
+production-mcp  →  https://guu84124.apps.dynatrace.com        (production)
+sprint-mcp  →  https://bon05374.sprint.apps.dynatracelabs.com  (sprint)
 ```
 
 Authentication uses OAuth browser SSO — no API tokens or credentials are stored in the workspace. To target a specific environment in a Copilot session:
 
 ```
-"Use the guu84124-mcp server for all queries"
+"Use the production-mcp server for all queries"
 ```
 
 ---
@@ -195,14 +195,14 @@ dtctl doctor                           # Verify authentication and connectivity
 Two authenticated contexts are configured:
 
 ```
-guu84124   →  production  (default)
-bon05374   →  sprint
+production  (default)
+sprint
 ```
 
 Switch between them with:
 ```bash
-dtctl config use-context guu84124
-dtctl config use-context bon05374
+dtctl config use-context production
+dtctl config use-context sprint
 ```
 
 ---
@@ -215,7 +215,7 @@ Here is the complete flow for a typical `/daily-standup-notebook` session:
 1. You type /daily-standup-notebook in Copilot Chat
 
 2. Copilot loads copilot-instructions.md
-   → Knows to use guu84124-mcp by default
+   → Knows to use production-mcp by default
    → Knows the investigation rules and DQL guardrails
 
 3. Copilot loads relevant skills
@@ -224,7 +224,7 @@ Here is the complete flow for a typical `/daily-standup-notebook` session:
    → dt-app-notebooks (notebook structure)
    → dtctl            (verification commands)
 
-4. Copilot calls guu84124-mcp
+4. Copilot calls production-mcp
    → Executes live DQL queries against production
    → Retrieves metrics, problems, and deployment data
 
@@ -272,10 +272,10 @@ curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh
 | Component | Source |
 |---|---|
 | 13 Dynatrace skills | [github.com/Dynatrace/dynatrace-for-ai](https://github.com/Dynatrace/dynatrace-for-ai) |
-| 6 investigation prompts | [github.com/Dynatrace/dynatrace-for-ai/prompts](https://github.com/Dynatrace/dynatrace-for-ai/tree/main/prompts) |
+| 7 investigation prompts | [github.com/Dynatrace/dynatrace-for-ai/prompts](https://github.com/Dynatrace/dynatrace-for-ai/tree/main/prompts) |
 | MCP server package | [github.com/dynatrace-oss/dynatrace-mcp](https://github.com/dynatrace-oss/dynatrace-mcp) |
 | dtctl CLI + skill | [github.com/dynatrace-oss/dtctl](https://github.com/dynatrace-oss/dtctl) |
 | copilot-instructions.md | Lean session briefing auto-loaded by GitHub Copilot |
 | CLAUDE.md | Lean session briefing auto-loaded by Claude Code |
 | ELI5.md | Beginner-friendly 15-minute install guide |
-| daily-standup-notebook prompt | Built in this session with DQL guardrails from live testing |
+| daily-standup-notebook prompt | Custom prompt with DQL guardrails from live testing |

@@ -41,7 +41,7 @@ dynatrace-ai-workspace/
 | [VS Code](https://code.visualstudio.com/) | Editor with Copilot/Claude Chat | Both |
 | [GitHub Copilot](https://github.com/features/copilot) | AI assistant | GitHub Copilot (subscription) |
 | [Claude Code](https://claude.ai/code) | AI assistant | Claude AI (Pro or Team) |
-| [Node.js](https://nodejs.org/) v18+ | Required for skills installer and MCP server | Both |
+| [Node.js](https://nodejs.org/) v18+ | Required to run the MCP server | Both |
 | [dtctl](https://github.com/dynatrace-oss/dtctl) | Dynatrace open-source CLI for agents & humans to manage observability resources | Both |
 | A Dynatrace environment | `https://<env>.apps.dynatrace.com` or `https://<env>.sprint.apps.dynatracelabs.com` | Both |
 
@@ -52,6 +52,7 @@ dynatrace-ai-workspace/
 > **Dynatrace employees & partners:** This workspace is pre-configured for the standard
 > Dynatrace demo environment (`guu84124.apps.dynatrace.com`). No changes are
 > required to run demos against the production demo tenant. Clone the repo,
+> run `dtctl auth login --context production --environment "https://guu84124.apps.dynatrace.com"`,
 > reload VS Code, and authenticate via your Dynatrace SSO when prompted.
 
 ### Choose Your Frontend
@@ -64,7 +65,7 @@ Select your setup path below. Both receive the same skills, prompts, and MCP ser
 
 **GitHub Copilot Path** → Follow Steps 1–6 below. Copilot loads `.github/copilot-instructions.md` automatically.
 
-**Claude Code Path** → Follow Steps 1–5, then open `CLAUDE.md` in your Claude Code session. Claude loads `.claude/skills/` symlinks automatically.
+**Claude Code Path** → Follow Steps 1–6. `CLAUDE.md` is auto-loaded at the start of each Claude Code session — no manual step required.
 
 ### 1. Clone the workspace
 
@@ -75,14 +76,16 @@ cd dynatrace-ai-workspace
 
 Then open the folder in VS Code via **File → Open Folder**.
 
-### 2. Update skills to latest
+### 2. Update skills to latest *(optional)*
+
+Skills are already included in this repo — cloning gives you everything you need. Run this only when you want to pull the latest skill updates from Dynatrace:
 
 ```bash
 npx skills add dynatrace/dynatrace-for-ai
 npx skills add dynatrace-oss/dtctl
 ```
 
-> Run this command any time Dynatrace releases new skills.
+> See [Keeping Up to Date](#keeping-up-to-date) for when to run this.
 
 ### 3. Configure dtctl for the shared demo tenant
 
@@ -94,14 +97,14 @@ required for demo workflows in this workspace.
 curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh | bash
 
 # Local desktop (macOS/Windows/Linux with keyring): OAuth login
-dtctl auth login --context guu84124 \
+dtctl auth login --context production \
   --environment "https://guu84124.apps.dynatrace.com"
 
 # GitHub Codespaces / CI: token-based auth
-dtctl config set-context guu84124 \
+dtctl config set-context production \
   --environment "https://guu84124.apps.dynatrace.com" \
-  --token-ref guu84124-token
-dtctl config set-credentials guu84124-token --token <YOUR_PLATFORM_TOKEN>
+  --token-ref production-token
+dtctl config set-credentials production-token --token <YOUR_PLATFORM_TOKEN>
 
 # Verify
 dtctl doctor
@@ -114,15 +117,16 @@ If you are in Codespaces and see `keyring probe failed` or `dbus-launch` errors,
 ### 4. Configure your sprint environment (optional)
 
 The workspace is pre-configured with two MCP servers — the shared demo tenant
-(`guu84124`) and a personal sprint tenant. The sprint entry is specific to the
-original author and **must be updated** if you want to use your own sprint environment.
-
-Complete all four steps below to fully configure your sprint tenant. Skipping
-any step will result in Copilot referencing a server that doesn't exist or
-authenticating against the wrong environment.
+(`guu84124`) and a secondary sprint tenant (`bon05374`). The `bon05374` entry is
+specific to the original author — replace it with your own tenant ID if you want
+to connect a second environment.
 
 > If you only need the shared demo tenant (`guu84124`), skip this section entirely —
-> no sprint configuration is required for demos.
+> no additional configuration is required.
+
+Complete all four steps below to configure your own secondary tenant. Skipping
+any step will result in Copilot referencing a server that doesn't exist or
+authenticating against the wrong environment.
 
 #### Sprint Tenant Checklist
 
@@ -133,7 +137,7 @@ Replace `<your-tenant-id>` with your personal sprint tenant ID (e.g. `abc12345`)
 ```json
 {
   "servers": {
-    "guu84124-mcp": {
+    "production-mcp": {
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "@dynatrace-oss/dynatrace-mcp-server@latest", "--stdio"],
@@ -141,7 +145,7 @@ Replace `<your-tenant-id>` with your personal sprint tenant ID (e.g. `abc12345`)
         "DT_ENVIRONMENT": "https://guu84124.apps.dynatrace.com"
       }
     },
-    "<your-tenant-id>-mcp": {
+    "sprint-mcp": {
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "@dynatrace-oss/dynatrace-mcp-server@latest", "--stdio"],
@@ -172,10 +176,10 @@ You should see both MCP server entries with your sprint tenant ID in place.
 
 **Step 4.C — Update `.github/copilot-instructions.md` and `CLAUDE.md`**
 
-Find the Environment table in both files and update the fallback server name and URL to match your tenant ID:
+Find the Environment table in both files and update the fallback server URL to match your tenant ID:
 
 ```
-| **Fallback MCP server** | `<your-tenant-id>-mcp` → https://<your-tenant-id>.sprint.apps.dynatracelabs.com |
+| **Fallback MCP server** | `sprint-mcp` → https://<your-tenant-id>.sprint.apps.dynatracelabs.com |
 ```
 
 Both `.github/copilot-instructions.md` (GitHub Copilot) and `CLAUDE.md` (Claude Code) must be updated with your tenant ID or they will reference the original author's sprint environment.
@@ -184,14 +188,14 @@ Both `.github/copilot-instructions.md` (GitHub Copilot) and `CLAUDE.md` (Claude 
 
 ```bash
 # Local desktop (macOS/Windows/Linux with keyring): OAuth login
-dtctl auth login --context <your-tenant-id> \
+dtctl auth login --context sprint \
   --environment "https://<your-tenant-id>.sprint.apps.dynatracelabs.com"
 
 # GitHub Codespaces / CI: token-based auth
-dtctl config set-context <your-tenant-id> \
+dtctl config set-context sprint \
   --environment "https://<your-tenant-id>.sprint.apps.dynatracelabs.com" \
-  --token-ref <your-tenant-id>-token
-dtctl config set-credentials <your-tenant-id>-token --token <YOUR_PLATFORM_TOKEN>
+  --token-ref sprint-token
+dtctl config set-credentials sprint-token --token <YOUR_PLATFORM_TOKEN>
 ```
 
 If OAuth fails with a keyring error (for example, `dbus-launch` not found), use the token-based method above.
@@ -209,7 +213,7 @@ to VS Code. Subsequent sessions authenticate automatically.
 **GitHub Copilot users:** In Copilot Chat, type:
 
 ```
-Using the guu84124-mcp server, list the top 5 services by request volume in the last hour
+Using the production-mcp server, list the top 5 services by request volume in the last hour
 ```
 
 **Claude Code users:** In Claude Code, type the same query or copy it from the GitHub Copilot instruction above.
@@ -310,14 +314,14 @@ jq "{mcpServers: .servers}" .vscode/mcp.json > .mcp.json
 curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh | bash
 
 # Local desktop (macOS/Windows/Linux with keyring): OAuth login
-dtctl auth login --context guu84124 \
+dtctl auth login --context production \
   --environment "https://guu84124.apps.dynatrace.com"
 
 # GitHub Codespaces / CI: token-based auth
-dtctl config set-context guu84124 \
+dtctl config set-context production \
   --environment "https://guu84124.apps.dynatrace.com" \
-  --token-ref guu84124-token
-dtctl config set-credentials guu84124-token --token <YOUR_PLATFORM_TOKEN>
+  --token-ref production-token
+dtctl config set-credentials production-token --token <YOUR_PLATFORM_TOKEN>
 
 # Verify
 dtctl doctor

@@ -4,12 +4,12 @@
 
 | | |
 |---|---|
-| **Default MCP server** | `guu84124-mcp` → https://guu84124.apps.dynatrace.com |
-| **Fallback MCP server** | `bon05374-mcp` → https://bon05374.sprint.apps.dynatracelabs.com |
+| **Default MCP server** | `production-mcp` → https://guu84124.apps.dynatrace.com |
+| **Fallback MCP server** | `sprint-mcp` → https://bon05374.sprint.apps.dynatracelabs.com |
 
 To target a specific environment for a session:
 ```
-"Use the bon05374-mcp server for all queries in this session"
+"Use the sprint-mcp server for all queries in this session"
 ```
 
 ## Global Rule

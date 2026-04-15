@@ -196,7 +196,7 @@ fetch spans | filter trace_id == "[TRACE-ID]" | sort start_time asc
 
 **Switch MCP Server:**
 ```
-"For all queries, use the bon05374-mcp server"
+"For all queries, use the sprint-mcp server"
 ```
 
 **Parallel Queries:**
@@ -229,4 +229,4 @@ If hitting 500GB limit:
 
 ---
 
-**Last Updated:** April 10, 2026 | **Default MCP:** guu84124-mcp | **Status:** Production
+**Last Updated:** April 15, 2026 | **Default MCP:** production-mcp | **Status:** Production

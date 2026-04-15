@@ -12,7 +12,7 @@ You need three things installed:
 |---|---|---|
 | [VS Code](https://code.visualstudio.com/) | Where you will work | Download and install |
 | GitHub Copilot or Claude Code | The AI brain | Copilot: sign in at github.com/features/copilot · Claude: sign in at claude.ai/code |
-| [Node.js](https://nodejs.org/) v18+ | Powers the skill installer | Download LTS version |
+| [Node.js](https://nodejs.org/) v18+ | Required to run the MCP server | Download LTS version |
 
 ---
 
@@ -25,6 +25,14 @@ cd dynatrace-ai-workspace
 
 Then open the folder in VS Code: **File → Open Folder**.
 
+> **Want to connect a second Dynatrace environment?** The workspace comes pre-configured with the shared demo tenant (`guu84124`). If you also want to connect your own environment, update these four files replacing `bon05374` with your tenant ID, and authenticate dtctl using `--context sprint`:
+> - `.vscode/mcp.json`
+> - `.mcp.json`
+> - `.github/copilot-instructions.md`
+> - `CLAUDE.md`
+>
+> See [README.md Step 4](./README.md#4-configure-your-sprint-environment-optional) for full instructions. This is optional — skip it if you only need the shared demo tenant.
+
 ---
 
 ## Step 2 — Install dtctl
@@ -35,8 +43,8 @@ Then open the folder in VS Code: **File → Open Folder**.
 # Install (macOS / Linux)
 curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh | bash
 
-# Connect to the demo environment
-dtctl auth login --context guu84124 \
+# Connect to the demo environment — opens a browser for Dynatrace SSO login
+dtctl auth login --context production \
   --environment "https://guu84124.apps.dynatrace.com"
 
 # Verify it works
@@ -47,18 +55,7 @@ When `dtctl doctor` shows green, you are connected.
 
 ---
 
-## Step 3 — Install the Skills
-
-Skills teach the AI how Dynatrace works — correct field names, query patterns, and investigation steps. Without them, the AI guesses and gets it wrong.
-
-```bash
-npx skills add dynatrace/dynatrace-for-ai
-npx skills add dynatrace-oss/dtctl
-```
-
----
-
-## Step 4 — Reload VS Code
+## Step 3 — Reload VS Code
 
 Press `Cmd+Shift+P` → type `Developer: Reload Window` → press Enter.
 
@@ -66,12 +63,12 @@ This activates the Dynatrace live data connection. The first time you use a prom
 
 ---
 
-## Step 5 — Try It
+## Step 4 — Try It
 
 In Copilot Chat or Claude Code, type:
 
 ```
-Using the guu84124-mcp server, list the top 5 services by request volume in the last hour
+Using the production-mcp server, list the top 5 services by request volume in the last hour
 ```
 
 If you see a table of services with request counts — you are live.
