@@ -10,7 +10,7 @@ An AI-powered observability workspace for Dynatrace — combining GitHub Copilot
 
 ```
 dynatrace-ai-workspace/
-├── CHEATSHEET.md                 # Quick reference — 7 copy-paste DQL queries and critical rules
+├── CHEATSHEET.md                 # Quick reference — workflows, outputs, dtctl, and key rules
 ├── ARCHITECTURE.md               # How the workspace is built and how components connect
 ├── ELI5.md                       # Beginner-friendly 15-minute install guide
 ├── README.md                     # Setup guide and quick reference
@@ -272,10 +272,10 @@ Prompts are pre-built investigation workflows available as slash commands.
 The prompts follow a structured drill-down pattern:
 
 ```
-/health-check          →  flag concerns
-/troubleshoot-problem  →  investigate a specific problem
-/investigate-error     →  drill into error patterns
-/incident-response     →  full triage when things are on fire
+/daily-standup           →  spot anomalies across services
+  → /health-check        →  confirm which service has issues
+    → /investigate-error →  find the root cause
+      → /troubleshoot-problem →  deep-dive a specific problem
 ```
 
 ---

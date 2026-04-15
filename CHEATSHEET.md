@@ -1,232 +1,126 @@
-# Dynatrace Investigation Cheat Sheet
+# Dynatrace AI Workspace — Cheat Sheet
 
-**Keep this handy while troubleshooting.** Copy-paste queries, customize as needed.
+**Use this to pick the right workflow, not write DQL.**
 
 ---
 
-## 🚀 Quick Start Commands
+## When to use which workflow
+
+| Situation | Start here | What you get back |
+|-----------|------------|-------------------|
+| Something is broken right now | `/incident-response` | All active problems prioritized by business impact, with mitigation steps and a shareable incident report |
+| You have a specific problem ID | `/troubleshoot-problem` | 7-step RCA: scoped logs → error classification → trace timeline → root cause hypothesis |
+| Error rates spiked after a deploy | `/performance-regression` | Before/after metrics comparison, bottleneck span, and a rollback or hotfix recommendation |
+| Investigating error noise from a service | `/investigate-error [service-name]` | Top 3 error patterns with example logs, related traces, and remediation suggestions |
+| Routine service health check | `/health-check [service-name]` | RED metrics, active problems, recent deployments, top slow endpoints, vulnerabilities |
+| Morning catch-up across all services | `/daily-standup` | Per-service health status, today vs yesterday comparison, and action items |
+| Standup + notebook for sharing | `/daily-standup-notebook` | Same as `/daily-standup` plus a Dynatrace notebook created and verified via dtctl |
+
+---
+
+## Workflow chaining
+
+Most investigations follow this escalation path:
+
+```
+/daily-standup           → spot anomalies
+  → /health-check        → confirm which service
+    → /investigate-error → find the root cause
+      → /troubleshoot-problem → deep-dive a specific problem
+```
+
+For live incidents, skip straight to `/incident-response` — it triages all active problems at once.
+
+For deploys that went wrong, use `/performance-regression` — it compares before/after and recommends rollback or hotfix.
+
+---
+
+## Skills — what they unlock
+
+Skills are loaded automatically when relevant. You can also ask for one directly.
+
+| Ask about... | Skill used |
+|---|---|
+| Service error rates, latency, throughput | `dt-obs-services` |
+| Kubernetes pods, workloads, crash loops | `dt-obs-kubernetes` |
+| Host CPU, memory, disk, processes | `dt-obs-hosts` |
+| Frontend performance, Web Vitals, RUM | `dt-obs-frontends` |
+| Distributed traces, request flows | `dt-obs-tracing` |
+| Log search and pattern analysis | `dt-obs-logs` |
+| Problem RCA and impact scope | `dt-obs-problems` |
+| AWS resources and infrastructure | `dt-obs-aws` |
+| Dashboards — create or modify | `dt-app-dashboards` |
+| Notebooks — create or modify | `dt-app-notebooks` |
+| Terminal / CLI operations | `dtctl` |
+| Writing any DQL query | `dt-dql-essentials` (always load first) |
+
+---
+
+## dtctl — terminal companion
+
+`dtctl` is the CLI-side of this workspace. Use it when you want to verify, query, or manage resources from the terminal rather than through chat.
 
 | Task | Command |
 |------|---------|
-| **Check service health** | `/health-check [service-name]` |
-| **Troubleshoot active problem** | `/troubleshoot-problem` |
-| **Create investigation notebook** | Ask: *"Create a notebook for [issue]"* |
+| Verify connection | `dtctl doctor` |
+| Run a DQL query | `dtctl query 'fetch dt.davis.problems \| filter event.status == "ACTIVE"'` |
+| List workflows | `dtctl get workflows` |
+| List notebooks | `dtctl get notebooks` |
+| Switch environments | `dtctl config use-context production` / `dtctl config use-context sprint` |
+
+The AI workflows and dtctl point at the same environment — use chat for investigation, dtctl for spot-checks and verification.
 
 ---
 
-## 📋 Most Common DQL Queries
+## When workflows stop short
 
-### 1. List Active Problems (ALWAYS START HERE)
-```dql
-fetch dt.davis.problems, from: now()-24h, to: now()
-| filter not(dt.davis.is_duplicate) and event.status == "ACTIVE"
-| sort event.start desc
+These are expected behaviours, not errors:
+
+| What you see | Why | What to do |
+|---|---|---|
+| "No active problems found" | No problems in last 7 days | Widen to recently closed problems, or check you're on the right environment |
+| "No regression threshold exceeded" | `/performance-regression` found no signal | Trust the result — or re-run with a narrower timeframe if you suspect a specific window |
+| "Could not correlate to a local file" | `/performance-regression` found the bottleneck span but no matching code | The slow code may be in a dependency or a service not in this workspace |
+| Query returns 0 results | Filters too tight, or wrong entity | Verify the service name with `/health-check` first |
+| 500GB scan limit hit | Log query too broad | A workflow should have scoped it — if writing your own query, add entity filter + tighter timeframe |
+
+---
+
+## Key rules
+
+**Start with problems — never open-ended log searches.**
+All workflows enforce this. If you skip it, you'll hit the 500GB scan limit.
+
+**Scope everything to a problem timeframe.**
+Workflows extract the timeframe automatically. If you're writing your own query, use ±5 min around the incident window.
+
+**Let the workflow drive DQL — don't write queries from scratch.**
+Ask: *"What were the error patterns during the last problem on [service]?"* — not *"Write a DQL query for..."*
+
+---
+
+## Session targeting
+
+Default environment: `production-mcp` → https://guu84124.apps.dynatrace.com
+
+To switch for the session:
 ```
-
-### 2. Service RED Metrics (Last 1 Hour)
-```dql
-fetch spans, from: now()-1h, to: now()
-| filter dt.service.name == "[SERVICE]" AND request.is_root_span == true
-| summarize 
-    requests = count(),
-    errors = count(http.response.status_code >= 400),
-    p99_latency_ms = percentile(duration, 99)
-```
-
-### 3. Find Slowest Endpoints
-```dql
-fetch spans, from: now()-1h, to: now()
-| filter dt.service.name == "[SERVICE]" AND request.is_root_span == true
-| summarize p99_duration = percentile(duration, 99), by: {request.endpoint}
-| sort p99_duration desc
-| limit 5
-```
-
-### 4. Get Error Rate by Status Code
-```dql
-fetch spans, from: now()-1h, to: now()
-| filter dt.service.name == "[SERVICE]" AND request.is_root_span == true
-| summarize total = count(), by: {http.response.status_code}
-| sort total desc
-```
-
-### 5. Query Logs (SCOPED ONLY!)
-```dql
-fetch logs, from: [problem.start - 5min], to: [problem.end + 5min]
-| filter dt.entity.service == "[SERVICE]"
-| filter loglevel == "ERROR" OR loglevel == "WARN"
-| sort timestamp desc
-| limit 50
-```
-
-### 6. Trace a Failing Request
-```dql
-fetch spans, from: now()-30m, to: now()
-| filter trace_id == "[TRACE-ID]"
-| sort start_time asc
-```
-
-### 7. Correlate Logs by Trace ID
-```dql
-fetch logs, from: now()-30m, to: now()
-| filter dt.trace_id == "[TRACE-ID]" OR trace_id == "[TRACE-ID]"
-| sort timestamp asc
+"Use the sprint-mcp server for all queries in this session"
 ```
 
 ---
 
-## ⚠️ Critical Rules
+## Useful natural language prompts
 
-| Rule | Why | How |
-|------|-----|-----|
-| **Start with problems first** | Avoid 500GB log scans | Always use `@troubleshoot-problem` |
-| **Scope log queries** | Hits 500GB limit without context | Add `dt.entity.service` + timeframe ±5min |
-| **Use `{}` for multiple fields** | Syntax error if missing | `by: {field1, field2}` ✅ not `field1, field2` ❌ |
-| **Use `in()` not arrays** | DQL syntax | `in(field, "a", "b")` ✅ not `["a", "b"]` ❌ |
-| **Load `dt-dql-essentials`** | Ensure correct DQL syntax | Load before writing any DQL |
-| **5-minute buffer** | Catch pre/post-incident logs | `from: [start - 5min], to: [end + 5min]` |
+These work well when you're not sure which workflow to reach for:
 
----
-
-## 🔧 Common Customizations
-
-| Need | Adjustment |
-|------|------------|
-| Different timeframe | Change `now()-1h` → `now()-24h` or `now()-7d` |
-| Multiple services | `filter in(dt.service.name, "[SVC1]", "[SVC2]")` |
-| Production only | `filter dt.environment == "prod"` |
-| Group by host | Add `by: {dt.host.name}` to summarize |
-| Case-insensitive search | `contains(lower(content), "timeout")` |
-| Specific error type | `filter contains(lower(content), "connection refused")` |
+- *"Are there any active problems right now?"*
+- *"What happened to [service] in the last hour?"*
+- *"Show me the slowest endpoints for [service] since the last deployment"*
+- *"Create a notebook summarising today's incidents"*
+- *"What's the root cause of problem [ID]?"*
+- *"Compare [service] performance before and after [deploy time]"*
 
 ---
 
-## 📊 Data Objects Quick Reference
-
-| Object | Purpose | Use Case |
-|--------|---------|----------|
-| `fetch spans` | Distributed tracing | Request flows, latency, errors |
-| `fetch logs` | Log events | Debug, correlate with errors |
-| `fetch dt.davis.problems` | Davis problems | Active incidents, RCA |
-| `fetch bizevents` | Business metrics | Custom events, user actions |
-| `timeseries` | Metrics over time | CPU, memory, throughput trends |
-
----
-
-## 🎯 Standard Investigation Workflow (7 Steps)
-
-**Step 1: List Active Problems**
-```dql
-fetch dt.davis.problems, from: now()-24h, to: now()
-| filter not(dt.davis.is_duplicate) and event.status == "ACTIVE"
-| sort event.start desc
-```
-→ Extract problem ID, start time, end time, affected service
-
-**Step 2: Scope Investigation**
-- Problem context: `[problemId, startTime, endTime, affected_entities]`
-
-**Step 3: Query Logs (Scoped ±5 min)**
-```dql
-fetch logs, from: [startTime - 5min], to: [endTime + 5min]
-| filter dt.entity.service == "[SERVICE]"
-| filter loglevel == "ERROR" OR loglevel == "WARN"
-| sort timestamp desc
-```
-→ Extract trace ID, error pattern, affected component
-
-**Step 4: Classify Errors**
-- Categories: app error, infrastructure, auth, external, benign
-
-**Step 5: Trace Analysis**
-```dql
-fetch spans | filter trace_id == "[TRACE-ID]" | sort start_time asc
-```
-→ Answer: What call failed? Which service? Why?
-
-**Step 6: Summarize Findings**
-- Root cause hypothesis
-- Affected services / users
-- Next steps (fix or escalate)
-
----
-
-## 🚨 Common Errors & Fixes
-
-| Error | Cause | Fix |
-|-------|-------|-----|
-| `Unknown data object` | Typo in object | Check: `fetch logs` vs `fetch events` |
-| `Field not found` | Wrong field name | Use correct case: `dt.entity.service` ✅ |
-| `Syntax error at position X` | Missing `{}` in grouping | Use `by: {field1, field2}` |
-| `Query scanned 500GB+` | Too broad scope | Reduce timeframe ±2min + add filters |
-| Empty results | Correct query, no data | Extend timeframe or verify filters |
-| No spans in trace | Trace not indexed | Fall back to log-based lookup by `dt.trace_id` |
-
----
-
-## 💡 Pro Tips
-
-1. **Test with `limit 1` first** — Verify query structure before full results
-2. **Filter early** — `filter A | filter B` is faster than broad query
-3. **Parallel queries** — Batch independent queries together (saves time)
-4. **Case matters** — `dt.service.name` not `dt.SERVICE.name`
-5. **Include 5-min buffer** — `from: [startTime - 5min], to: [endTime + 5min]`
-6. **Never skip problem context** — Always scope before querying logs
-
----
-
-## 📞 When to Load Skills
-
-| Situation | Load Skill |
-|-----------|-----------|
-| Writing DQL queries | `dt-dql-essentials` |
-| Service performance | `dt-obs-services` |
-| Problem RCA | `dt-obs-problems` |
-| Request tracing | `dt-obs-tracing` |
-| Searching logs | `dt-obs-logs` |
-| Frontend/RUM issues | `dt-obs-frontends` |
-| Kubernetes/pod issues | `dt-obs-kubernetes` |
-| Infrastructure/host issues | `dt-obs-hosts` |
-| AWS infrastructure | `dt-obs-aws` |
-| Terminal/CLI workflows | `dtctl` |
-
----
-
-## 🔗 Session Management
-
-**Switch MCP Server:**
-```
-"For all queries, use the sprint-mcp server"
-```
-
-**Parallel Queries:**
-Multiple unrelated queries in same prompt = faster than sequential
-
-**Trace Fallback:**
-If trace has no spans, use log-based lookup:
-```dql
-fetch logs | filter dt.trace_id == "[TRACE-ID]" OR trace_id == "[TRACE-ID]"
-```
-
-**Viewport Overflow:**
-If hitting 500GB limit:
-1. Reduce timeframe (±2 min instead of ±5 min)
-2. Add more filters (service, host, error type)
-3. Ask user for narrower problem context
-
----
-
-## ✅ Pre-Query Checklist
-
-- [ ] Load `dt-dql-essentials` skill
-- [ ] Start with `@troubleshoot-problem` or problem context
-- [ ] Have problem timeframe (start, end)
-- [ ] Know affected service/entity
-- [ ] Plan ±5 min buffer for log queries
-- [ ] Use correct entity selectors (`dt.entity.*`)
-- [ ] Use `by: {field1, field2}` for multiple groupings
-- [ ] Check viewport (500GB limit)
-
----
-
-**Last Updated:** April 15, 2026 | **Default MCP:** production-mcp | **Status:** Production
+**Default MCP:** production-mcp | **Last Updated:** April 15, 2026

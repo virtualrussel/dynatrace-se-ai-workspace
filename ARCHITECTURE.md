@@ -60,7 +60,7 @@ This workspace solves all four problems by combining three things: domain knowle
 
 ---
 
-## The Four Components
+## The Five Components
 
 ### 1. Agent Skills
 **Source:** [github.com/Dynatrace/dynatrace-for-ai](https://github.com/Dynatrace/dynatrace-for-ai) + [github.com/dynatrace-oss/dtctl](https://github.com/dynatrace-oss/dtctl)
@@ -116,7 +116,7 @@ Authentication uses OAuth browser SSO — no API tokens or credentials are store
 ---
 
 ### 3. Prompt Templates
-**Source:** [github.com/Dynatrace/dynatrace-for-ai/prompts](https://github.com/Dynatrace/dynatrace-for-ai/tree/main/prompts) + built in this session
+**Source:** [github.com/Dynatrace/dynatrace-for-ai/prompts](https://github.com/Dynatrace/dynatrace-for-ai/tree/main/prompts)
 **Location:** `.github/prompts/`
 
 Prompts are pre-built investigation workflows saved as slash commands. They combine skills with structured instructions — telling Copilot what to do, in what order, and with what guardrails. Type `/` in Copilot Chat to see all available prompts.
@@ -136,13 +136,13 @@ Prompts are pre-built investigation workflows saved as slash commands. They comb
 Prompts are designed to chain together as an investigation deepens:
 
 ```
-/health-check              Flag concerns across a service
+/daily-standup             Spot anomalies across services
        ↓
-/troubleshoot-problem      Investigate a specific problem deeply
+/health-check              Confirm which service has issues
        ↓
-/investigate-error         Drill into error patterns and traces
+/investigate-error         Find the root cause
        ↓
-/incident-response         Full triage if situation escalates
+/troubleshoot-problem      Deep-dive a specific problem
 ```
 
 #### Key Guardrails Built Into Prompts
@@ -275,7 +275,5 @@ curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh
 | 7 investigation prompts | [github.com/Dynatrace/dynatrace-for-ai/prompts](https://github.com/Dynatrace/dynatrace-for-ai/tree/main/prompts) |
 | MCP server package | [github.com/dynatrace-oss/dynatrace-mcp](https://github.com/dynatrace-oss/dynatrace-mcp) |
 | dtctl CLI + skill | [github.com/dynatrace-oss/dtctl](https://github.com/dynatrace-oss/dtctl) |
-| copilot-instructions.md | Lean session briefing auto-loaded by GitHub Copilot |
-| CLAUDE.md | Lean session briefing auto-loaded by Claude Code |
+| CHEATSHEET.md | Quick reference for workflows, outputs, dtctl commands, and expected edge cases — focused on agentic workflows, not DQL syntax |
 | ELI5.md | Beginner-friendly 15-minute install guide |
-| daily-standup-notebook prompt | Custom prompt with DQL guardrails from live testing |
