@@ -42,14 +42,16 @@ dynatrace-ai-workspace/
     └── ai-observability-demo.md  # Demo script
 ```
 
-| Tool | Purpose | For |
-|---|---|---|
-| [VS Code](https://code.visualstudio.com/) | Editor with Copilot/Claude Chat | Both |
-| [GitHub Copilot](https://github.com/features/copilot) | AI assistant | GitHub Copilot (subscription) |
-| [Claude Code](https://claude.ai/code) | AI assistant | Claude AI (Pro or Team) |
-| [Node.js](https://nodejs.org/) v18+ | Required to run the MCP server | Both |
-| [dtctl](https://github.com/dynatrace-oss/dtctl) | Dynatrace open-source CLI for agents & humans to manage observability resources | Both |
-| A Dynatrace environment | `https://<env>.apps.dynatrace.com` or `https://<env>.sprint.apps.dynatracelabs.com` | Both |
+| Tool | Purpose |
+|---|---|
+| [VS Code](https://code.visualstudio.com/) | Editor with Copilot/Claude Chat |
+| [GitHub Copilot](https://github.com/features/copilot) | AI assistant (option 1) |
+| [Claude Code](https://claude.ai/code) | AI assistant (option 2) |
+| [Node.js](https://nodejs.org/) v18+ | Required to run the MCP server |
+| [dtctl](https://github.com/dynatrace-oss/dtctl) | Dynatrace open-source CLI for agents & humans to manage observability resources |
+| A Dynatrace environment | `https://<env>.apps.dynatrace.com` or `https://<env>.sprint.apps.dynatracelabs.com` |
+
+You must use one AI assistant path: **GitHub Copilot** or **Claude Code**.
 
 ---
 
