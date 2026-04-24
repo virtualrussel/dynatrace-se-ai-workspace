@@ -15,6 +15,7 @@ Recommended reading order: [docs/ELI5.md](./docs/ELI5.md) → [docs/OVERVIEW.md]
 ```
 dynatrace-ai-workspace/
 ├── README.md                     # Setup guide and quick reference
+├── llms.txt                      # Workspace overview for AI assistants
 ├── docs/
 │   ├── ELI5.md                   # Beginner-friendly 15-minute install guide
 │   ├── OVERVIEW.md               # Newcomer guide: purpose, value, and operating model

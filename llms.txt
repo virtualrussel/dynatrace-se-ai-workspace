@@ -1,0 +1,26 @@
+# Dynatrace AI Workspace
+
+A pre-configured AI assistant workspace for Dynatrace observability workflows, compatible with both Claude Code and GitHub Copilot. Skills, prompts, and MCP server connections are ready to use — load the workspace and start investigating without any additional setup.
+
+## Core Purpose
+
+This workspace teaches AI assistants how to work with a live Dynatrace environment. It combines domain knowledge (agent skills), reusable task templates (prompts), and direct platform access via the Dynatrace MCP server, so an AI can answer observability questions, run DQL queries, and investigate problems without additional configuration.
+
+## Key Components
+
+**MCP Servers:**
+Two live Dynatrace environments are pre-wired: a production tenant and a sprint/pre-release tenant. Specify which server to use at the start of a session.
+
+**Agent Skills:**
+13 domain knowledge packages load automatically when relevant. They cover DQL query fundamentals, service monitoring, frontend/RUM analytics, distributed tracing, infrastructure (hosts, Kubernetes, AWS), logging, problem analysis, dashboards, notebooks, migration, and the dtctl CLI.
+
+**Prompts / Slash Commands:**
+7 task templates cover common workflows: daily standup, health check, error investigation, problem troubleshooting, incident response, performance regression, and standup with notebook creation.
+
+## Operational Rule
+
+Always start with Dynatrace problems before querying logs or metrics. The built-in prompts enforce this automatically.
+
+## Technical Details
+
+Skills follow a `dt-<domain>[-<usecase>]` naming convention with a `SKILL.md` and optional `references/` subdirectory. Load `dt-dql-essentials` before writing any DQL queries. The `dtctl` skill covers the Dynatrace CLI for settings, configuration, and operational tasks beyond what the MCP server exposes.
