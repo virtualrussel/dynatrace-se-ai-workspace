@@ -35,3 +35,19 @@ Type `/` in Copilot Chat to access these slash commands:
 ## Skills
 
 13 domain knowledge skills are installed in `.agents/skills/`. They load automatically when relevant — no manual loading required.
+
+## dtctl
+
+`dtctl` is a kubectl-style CLI for terminal-level verification and resource management. Use it to confirm what AI workflows create via MCP.
+
+```bash
+dtctl doctor                             # verify auth and connectivity
+dtctl get notebooks                      # list notebooks
+dtctl describe notebook "name"           # inspect structure
+dtctl query 'fetch dt.davis.problems | filter event.status == "ACTIVE" | limit 5'
+dtctl get workflows
+dtctl config use-context production      # switch environments
+dtctl config use-context sprint
+```
+
+Two authenticated contexts are configured: `production` (default) and `sprint`.

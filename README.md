@@ -15,14 +15,16 @@ Recommended reading order: [docs/ELI5.md](./docs/ELI5.md) → [docs/OVERVIEW.md]
 ```
 dynatrace-ai-workspace/
 ├── README.md                     # Setup guide and quick reference
-├── llms.txt                      # Workspace overview for AI assistants
+├── llms.txt                      # Machine-readable workspace summary for LLMs
 ├── docs/
 │   ├── ELI5.md                   # Beginner-friendly 15-minute install guide
 │   ├── OVERVIEW.md               # Newcomer guide: purpose, value, and operating model
 │   └── CHEATSHEET.md             # Quick reference — workflows, outputs, dtctl, and key rules
 ├── ARCHITECTURE.md               # How the workspace is built and how components connect
+├── CONTRIBUTING.md               # How to update skills, prompts, and MCP config
 ├── CLAUDE.md                     # Auto-loaded session briefing for Claude Code
 ├── skills-lock.json              # Locked skill versions
+├── LICENSE
 ├── .gitignore
 ├── .github/
 │   ├── copilot-instructions.md   # Auto-loaded session briefing for GitHub Copilot
@@ -38,7 +40,9 @@ dynatrace-ai-workspace/
 ├── .claude/skills/               # Symlinks for Claude Code compatibility
 ├── .mcp.json                     # MCP server configuration for Copilot CLI
 ├── .vscode/
-│   └── mcp.json                  # MCP server configuration for VS Code Copilot
+│   ├── mcp.json                  # MCP server configuration for VS Code Copilot
+│   ├── extensions.json           # Recommended VS Code extensions
+│   └── settings.json             # Workspace editor settings
 └── demos/
     └── ai-observability-demo.md  # Demo script
 ```
@@ -49,7 +53,7 @@ dynatrace-ai-workspace/
 | [GitHub Copilot](https://github.com/features/copilot) | AI assistant (option 1) |
 | [Claude Code](https://claude.ai/code) | AI assistant (option 2) |
 | [Node.js](https://nodejs.org/) v18+ | Required to run the MCP server |
-| [dtctl](https://github.com/dynatrace-oss/dtctl) | Dynatrace open-source CLI for agents & humans to manage observability resources |
+| [dtctl](https://github.com/dynatrace-oss/dtctl) | **Required.** Dynatrace open-source CLI for agents & humans to manage observability resources |
 | A Dynatrace environment | `https://<env>.apps.dynatrace.com` or `https://<env>.sprint.apps.dynatracelabs.com` |
 
 You must use one AI assistant path: **GitHub Copilot** or **Claude Code**.
