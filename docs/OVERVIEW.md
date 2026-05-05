@@ -65,7 +65,7 @@ For SREs, operations engineers, and on-call teams, this repository improves dail
 - `dtctl doctor` validates connectivity and auth.
 - `dtctl get notebooks` and `dtctl describe notebook "name"` verify generated artifacts.
 - `dtctl query 'fetch dt.davis.problems | filter event.status == "ACTIVE" | limit 5'` runs direct checks.
-- `dtctl query --client-context "incident-response" 'fetch dt.davis.problems | filter event.status == "ACTIVE" | limit 5'` adds explicit query intent tags (available in dtctl v0.26.2+).
+- `dtctl query --client-context "incident-response" 'fetch dt.davis.problems | filter event.status == "ACTIVE" | limit 5'` adds explicit query intent tags (available in dtctl v0.27.0+).
 - `dtctl config use-context production` and `dtctl config use-context sprint` switch environments safely.
 
 ## AIOps Outcomes and ServiceNow Assist

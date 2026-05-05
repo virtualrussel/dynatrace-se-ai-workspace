@@ -60,7 +60,7 @@ Skills are loaded automatically when relevant. You can also ask for one directly
 
 `dtctl` is the CLI-side of this workspace (all dtctl examples below are terminal commands). Use it when you want to verify, query, or manage resources from the terminal rather than through chat.
 
-Compatibility: use `dtctl` v0.26.2 or newer. v0.26.2 adds `--client-context` for `query` and `verify query` so DQL calls can be attributed to investigation intent.
+Compatibility: use `dtctl` v0.27.0 or newer. v0.27.0 adds post-apply hooks, new document API query flags (--filter, --sort, --add-fields, --admin-access), and breaking changes to settings addressing.
 
 | Task | Command |
 |------|---------|

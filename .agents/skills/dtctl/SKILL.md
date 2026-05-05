@@ -209,7 +209,104 @@ dtctl wait query "fetch spans | filter test_id='test-123'" --for=count=1 --timeo
 dtctl query "timeseries avg(dt.host.cpu.usage)" -o chart --plain
 ```
 
+## v0.27.0 Features & Breaking Changes
 
+### Document API Query Flags (NEW in v0.27.0)
+
+`get dashboards`, `get notebooks`, and `get documents` now support advanced filtering and field selection:
+
+```bash
+# Filter by Document API expression (overrides --name/--type/--mine)
+dtctl get notebooks --filter 'name startsWith "incident-" and type == "notebook"'
+
+# Sort by multiple fields (prefix with - for descending)
+dtctl get dashboards --sort "name,-modificationInfo.lastModifiedTime"
+
+# Request fields the API omits by default
+dtctl get documents --add-fields "originExtensionId,labels,shareInfo.isShared"
+
+# List as effective owner (requires document:documents:admin)
+dtctl get dashboards --admin-access
+```
+
+These flags unlock Document API capabilities previously unreachable from the CLI. Use `--filter` for complex queries, `--sort` for custom ordering, `--add-fields` to retrieve metadata not in the default response.
+
+### Hooks for Workflows & Resources (v0.27.0+)
+
+#### Pre-apply Hooks
+
+Run custom validation or linting before applying resources. Hook output is now forwarded to the user (previously hidden):
+
+```yaml
+# ~/.config/dtctl/config.yaml
+hooks:
+  pre-apply: bash -c 'lint "$1" | tee /tmp/lint.log'
+```
+
+**BREAKING CHANGE (v0.27.0):** Hooks are now direct exec with POSIX-style tokenization — no `sh -c` wrapper.
+
+Before (v0.26):
+```yaml
+hooks:
+  pre-apply: "lint $1 | tee /tmp/lint.log"  # relied on shell wrapper
+```
+
+After (v0.27):
+```yaml
+hooks:
+  pre-apply: bash -c 'lint "$1" | tee /tmp/lint.log'  # explicit shell, proper quoting
+```
+
+Hook command strings are tokenized with google/shlex and exec'd directly with `<resource-type>` and `<source-file>` appended as final positional args. Pipe, redirect, and glob syntax must wrap in an explicit interpreter. Benefits: shell positional args ($1, $2, @$) now work correctly; paths with spaces are handled properly.
+
+#### Post-apply Hooks (NEW in v0.27.0)
+
+Fire custom logic after successful apply — perfect for notifications, cleanup, or logging:
+
+```yaml
+hooks:
+  post-apply: bash /etc/dtctl/notify-on-apply.sh
+```
+
+The hook receives the apply result envelope as JSON on stdin:
+```json
+{
+  "ok": true,
+  "result": [
+    {"kind": "workflow", "id": "wf-123", "action": "created"}
+  ]
+}
+```
+
+Hook stdout/stderr are forwarded to user. Non-zero exit is treated as warning — the resource is already persisted, so dtctl will not flip the overall command exit code. For batch applies (multiple resources), post-apply hooks also fire on partial success.
+
+In `--agent` / `-A` mode, hook output routes to stderr to keep JSON envelope on stdout machine-parseable.
+
+### Settings: Breaking Changes (v0.27.0)
+
+**Settings object addressing changed.** The synthetic UID/objectId-decoding is removed. Scope type and ID are now derived from the API-provided `scope` field.
+
+Breaking changes:
+- `dtctl describe|edit|delete setting <uuid>` no longer accepts synthetic UID
+- `--schema` and `--scope` flags removed from `delete`, `edit`, `describe`
+- UID column removed from `dtctl get settings` table output
+- Settings lookup is now single GET instead of O(N) resolution across all scopes
+
+**Migration for scripts:**
+
+Before (v0.26):
+```bash
+dtctl describe setting <some-synthetic-uuid>
+```
+
+After (v0.27):
+```bash
+# Use objectId from list output
+dtctl get settings -o json | jq -r '.[] | select(.value.foo == "bar") | .objectId' \
+  | xargs -I{} dtctl describe setting {}
+```
+
+If you script against settings, switch to the API-stable `objectId` (visible in `-o json` / `-o yaml` output).
 
 ## Dashboards
 
