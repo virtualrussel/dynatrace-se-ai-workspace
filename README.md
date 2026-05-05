@@ -363,6 +363,9 @@ dtctl get workflows
 dtctl get notebooks
 dtctl query 'fetch dt.davis.problems | filter event.status == "ACTIVE" | limit 5'
 dtctl query --client-context "incident-response" 'fetch dt.davis.problems | filter event.status == "ACTIVE" | limit 5'
+dtctl verify query --client-context "incident-response" 'fetch dt.davis.problems | limit 5'
+dtctl get notebooks --filter 'name == "<notebook-name>"' --sort "-modificationInfo.lastModifiedTime"
+dtctl get documents --add-fields "originExtensionId,labels,shareInfo.isShared"
 
 # Switch between configured contexts
 dtctl config use-context production

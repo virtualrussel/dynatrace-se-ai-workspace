@@ -49,11 +49,17 @@ dtctl auth whoami --plain
 dtctl auth can-i <verb> <resource>
 ```
 
+If `dtctl doctor` shows a platform-token user identity warning in v0.27.0+, treat it as informational when the overall check passes.
+
+In v0.27.0+, `dtctl config set-credentials` also clears stale OAuth cache for the same token reference, and revoked refresh-token sessions fall back to platform-token auth automatically.
+
 ### Wrong Tenant
 ```bash
 dtctl config get-contexts --plain
 dtctl config use-context <name>
 ```
+
+After `dtctl auth login --context <name>`, empty template contexts created by `dtctl config init` are pruned automatically in v0.27.0+.
 
 ### Safety Level Blocks
 Safety levels are client-side protections: `readonly`, `readwrite-mine`, `readwrite-all`, `dangerously-unrestricted`. API token scopes determine actual permissions.

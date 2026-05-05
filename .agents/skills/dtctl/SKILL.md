@@ -30,6 +30,8 @@ This displays:
 - Safety level (readonly, readwrite-mine, readwrite-all, dangerously-unrestricted)
 - Authenticated user identity (name, email, UUID)
 
+If you authenticate with a platform token, `dtctl doctor` on v0.27.0+ may show a user-identity warning while still passing overall auth checks.
+
 ## DQL Reference Usage
 
 Before writing, modifying, or executing any DQL that fetches Dynatrace data (for example via `dtctl query`, `dtctl wait query`, or query files), you MUST consult `references/DQL-reference.md` and follow its documented syntax and templates.
@@ -207,6 +209,9 @@ dtctl wait query "fetch spans | filter test_id='test-123'" --for=count=1 --timeo
 
 # Query with chart output
 dtctl query "timeseries avg(dt.host.cpu.usage)" -o chart --plain
+
+# Verify DQL syntax and command wiring without full investigation flow
+dtctl verify query --client-context "health-check" 'fetch dt.davis.problems | limit 5'
 ```
 
 ## v0.27.0 Compatibility Notes
@@ -220,6 +225,26 @@ Key v0.27 changes to account for when troubleshooting or writing automation:
 - Settings addressing updates: use API `objectId` for scripting rather than synthetic UID patterns.
 
 When scripts or playbooks previously built around v0.26 behavior fail, check these compatibility points first.
+
+```bash
+# Document API query controls on document-like resources
+dtctl get notebooks --filter 'name startsWith "incident-"' --sort "-modificationInfo.lastModifiedTime" -o json --plain
+dtctl get dashboards --sort "name,-modificationInfo.lastModifiedTime" -o json --plain
+dtctl get documents --add-fields "originExtensionId,labels,shareInfo.isShared" --admin-access -o json --plain
+```
+
+```yaml
+# .dtctl.yaml hooks (v0.27.0+)
+preferences:
+  hooks:
+    # Use explicit shell wrapping if you rely on pipes/redirection.
+    pre-apply: bash -c 'lint "$1" | tee /tmp/lint.log'
+    post-apply: bash /etc/dtctl/notify-on-apply.sh
+```
+
+- `post-apply` receives the apply result envelope on stdin.
+- `pre-apply` is direct exec (tokenized argv), so shell syntax must be wrapped explicitly.
+- `dtctl config set-credentials` in v0.27.0+ clears stale OAuth cache entries for the same token reference.
 
 
 
