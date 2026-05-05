@@ -265,4 +265,3 @@ fetch logs, from:now() - 4h
 - **dt-dql-essentials** - Core DQL syntax and query structure for log queries
 - **dt-obs-tracing** - Correlate logs with distributed traces using trace IDs
 - **dt-obs-problems** - Correlate logs with DAVIS-detected problems
-
