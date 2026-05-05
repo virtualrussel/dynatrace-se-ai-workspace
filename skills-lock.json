@@ -44,7 +44,7 @@
     "dt-obs-logs": {
       "source": "dynatrace/dynatrace-for-ai",
       "sourceType": "github",
-      "computedHash": "9e51796ef92508ff9789762e644d241d6a0734074d5d708b9bc2585238deea5d"
+      "computedHash": "193ff073497fe05b88f967727a670936bdbc39dc4c27b82998c3ac320811d930"
     },
     "dt-obs-problems": {
       "source": "dynatrace/dynatrace-for-ai",
