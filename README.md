@@ -387,6 +387,16 @@ git commit -m "Update skills to latest"
 git push
 ```
 
+### dtctl Version Transition Record
+
+This repository baseline moved from v0.26.x to v0.27.0+ in May 2026.
+
+- Previous baseline: v0.26.2 guidance
+- Current baseline: v0.27.0 or newer
+- Transition commit: `f857a23` (docs and skill guidance updates)
+
+Note: `skills-lock.json` records source and content hash snapshots for skills, not a separate semantic `dtctlVersion` field.
+
 ---
 
 ## Related Resources

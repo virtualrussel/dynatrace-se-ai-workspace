@@ -1,0 +1,58 @@
+name: skill-lock-guard
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate skill lock updates
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            BASE_REF="origin/${GITHUB_BASE_REF}"
+            git fetch origin "${GITHUB_BASE_REF}" --depth=1
+          else
+            BASE_REF="HEAD~1"
+          fi
+
+          changed_files="$(git diff --name-only "${BASE_REF}"...HEAD)"
+
+          if [[ -z "${changed_files}" ]]; then
+            echo "No changed files detected."
+            exit 0
+          fi
+
+          skills_changed=0
+          if echo "${changed_files}" | grep -E '^\.agents/skills/' >/dev/null 2>&1; then
+            skills_changed=1
+          fi
+
+          lock_changed=0
+          if echo "${changed_files}" | grep -E '^skills-lock\.json$' >/dev/null 2>&1; then
+            lock_changed=1
+          fi
+
+          if [[ "${skills_changed}" -eq 1 && "${lock_changed}" -eq 0 ]]; then
+            if git log -1 --pretty=%B | grep -q 'skip-skill-lock-check'; then
+              echo "Override detected in commit message: skip-skill-lock-check"
+              exit 0
+            fi
+
+            echo "Skill files changed without updating skills-lock.json."
+            echo "Update skills-lock.json in the same change, or use 'skip-skill-lock-check' with justification."
+            exit 1
+          fi
+
+          echo "Skill lock guard passed."

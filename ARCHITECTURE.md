@@ -265,6 +265,8 @@ Update `dtctl` by re-running the install script:
 curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh | bash
 ```
 
+Version baseline note: this workspace moved from dtctl v0.26.x guidance to v0.27.0+ in May 2026. For auditability, treat `skills-lock.json` hashes as the source-of-truth snapshot for committed skill content.
+
 ---
 
 ## Source References

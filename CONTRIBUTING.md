@@ -14,6 +14,10 @@ npx skills add dynatrace-oss/dtctl
 
 After updating, commit the changes to `.agents/skills/` and the updated hashes in `skills-lock.json` together.
 
+If a change is intentionally docs-only and not sourced from `npx skills add ...`, still update `skills-lock.json` to reflect the committed skill content hash so lock metadata remains auditable.
+
+If you intentionally skip lock updates for an exceptional reason, include `skip-skill-lock-check` in the commit message and explain the reason in the PR description.
+
 ## Adding a New Skill
 
 Skills must follow the `dt-<domain>[-<usecase>]` naming convention and live in `.agents/skills/<skill-name>/`. Each skill requires:
