@@ -65,7 +65,7 @@
       "source": "dynatrace-oss/dtctl",
       "sourceType": "github",
       "skillPath": "skills/dtctl/SKILL.md",
-      "computedHash": "90ea31f6b683c10e42c65a5ffe0eab0736485809276047bf1ef71985f959b34a"
+      "computedHash": "cd154d0e756a8caaf14cc0c179fc7072d604ba13795f6efeecb631211bb4acb1"
     }
   }
 }
