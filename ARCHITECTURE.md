@@ -6,7 +6,7 @@ This document explains what this workspace is, how it is built, and how the comp
 
 ## What This Is
 
-A pre-configured AI observability workspace that connects GitHub Copilot or Claude Code to Dynatrace — enabling natural language investigation of production systems directly from VS Code.
+A pre-configured AI observability workspace that connects GitHub Copilot or Claude Code to Dynatrace that enables natural language investigation of production systems directly from VS Code.
 
 Instead of logging into Dynatrace, navigating dashboards, and writing queries manually, you type a slash command in Copilot Chat or Claude Code and receive structured, accurate, production-aware answers in seconds.
 
@@ -14,8 +14,8 @@ Instead of logging into Dynatrace, navigating dashboards, and writing queries ma
 
 ## The Problem It Solves
 
-GitHub Copilot is a general-purpose AI assistant. Without domain-specific knowledge it will:
-- Guess DQL syntax — and get it wrong
+GitHub Copilot, or Claude Code, is a general-purpose AI assistant. Without domain-specific knowledge it will:
+- Guess DQL syntax and get it wrong
 - Use field names that don't exist (`log.level` instead of `loglevel`)
 - Write queries that hit scan limits and return zero results
 - Have no access to your live Dynatrace data
@@ -27,35 +27,35 @@ This workspace solves all four problems by combining three things: domain knowle
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    VS Code                              │
-│                                                         │
-│  ┌─────────────────┐      ┌──────────────────────────┐  │
-│  │  Copilot Chat   │      │   Integrated Terminal    │  │
-│  │                 │      │                          │  │
-│  │  /health-check  │      │  dtctl get workflows     │  │
-│  │  /troubleshoot  │      │  dtctl query "..."       │  │
-│  │  /standup       │      │  dtctl describe notebook │  │
-│  └────────┬────────┘      └────────────┬─────────────┘  │
-│           │                            │                │
-│  ┌────────▼────────┐                   │                │
-│  │  Agent Skills   │                   │                │
-│  │  (13 skills)    │                   │                │
-│  │  .agents/skills/│                   │                │
-│  └────────┬────────┘                   │                │
-└───────────┼────────────────────────────┼────────────────┘
-            │ MCP (stdio)                │ HTTPS + OAuth
-            ▼                            ▼
-┌───────────────────────────────────────────────────────────┐
-│              Dynatrace Platform                           │
-│                                                           │
-│   guu84124.apps.dynatrace.com  (production)               │
-│   bon05374.sprint.apps.dynatracelabs.com  (sprint)        │
-│                                                           │
-│   Grail data lakehouse — logs, spans, metrics, events     │
-│   Davis AI — problem detection, root cause analysis       │
-│   Notebooks, Dashboards, Workflows                        │
-└───────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────┐
+│                    VS Code                                        │
+│                                                                   │
+│    ┌─────────────────┐           ┌──────────────────────────┐     │
+│    │     AI Chat     │           │   Integrated Terminal    │     │
+│    │                 │           │                          │     │
+│    │  /health-check  │           │  dtctl get workflows     │     │
+│    │  /troubleshoot  │           │  dtctl query "..."       │     │
+│    │  /standup       │           │  dtctl describe notebook │     │
+│    └────────┬────────┘           └────────────┬─────────────┘     │
+│             │                                 │                   │
+│    ┌────────▼────────┐                        │                   │
+│    │  Agent Skills   │                        │                   │
+│    │   (13 skills)   │                        │                   │
+│    │ .agents/skills/ │                        │                   │
+│    └────────┬────────┘                        │                   │
+└─────────────┼─────────────────────────────────┼───────────────────┘
+              │ MCP (stdio) + OAuth             │ HTTPS + OAuth
+              ▼                                 ▼
+┌───────────────────────────────────────────────────────────────────┐
+│              Dynatrace Platform                                   │
+│                                                                   │
+│   guu84124.apps.dynatrace.com  (production)                       │
+│   bon05374.sprint.apps.dynatracelabs.com  (sprint)                │
+│                                                                   │
+│   Grail data lakehouse — logs, spans, metrics, events             │
+│   Dynatrace Intelligence — problem detection, root cause analysis │
+│   Notebooks, Dashboards, Workflows                                │
+└───────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -63,10 +63,9 @@ This workspace solves all four problems by combining three things: domain knowle
 ## The Five Components
 
 ### 1. Agent Skills
-**Source:** [github.com/Dynatrace/dynatrace-for-ai](https://github.com/Dynatrace/dynatrace-for-ai) + [github.com/dynatrace-oss/dtctl](https://github.com/dynatrace-oss/dtctl)
-**Location:** `.agents/skills/`
+**Source:** [github.com/Dynatrace/dynatrace-for-ai](https://github.com/Dynatrace/dynatrace-for-ai) & [github.com/dynatrace-oss/dtctl](https://github.com/dynatrace-oss/dtctl) **Location:** `.agents/skills/`
 
-Skills are markdown files containing domain-specific knowledge. They teach Copilot how Dynatrace works — correct DQL syntax, field names, query patterns, and investigation workflows. Copilot loads them automatically when relevant, using a three-tier progressive disclosure model:
+Skills are markdown files containing domain-specific knowledge. They teach Copilot how Dynatrace works including correct DQL syntax, field names, query patterns, and investigation workflows. Copilot loads them automatically when relevant, using a three-tier progressive disclosure model:
 
 ```
 Tier 1 — Catalog     Always loaded    ~100 tokens per skill
@@ -107,7 +106,7 @@ production-mcp  →  https://guu84124.apps.dynatrace.com        (production)
 sprint-mcp  →  https://bon05374.sprint.apps.dynatracelabs.com  (sprint)
 ```
 
-Authentication uses OAuth browser SSO — no API tokens or credentials are stored in the workspace. To target a specific environment in a Copilot session:
+Authentication for a local MCP server uses OAuth browser SSO so no API tokens or credentials are stored in the workspace. To target a specific environment in a Copilot session:
 
 ```
 "Use the production-mcp server for all queries"
@@ -178,9 +177,9 @@ The two files are identical in content but kept separate because each tool requi
 **Source:** [github.com/dynatrace-oss/dtctl](https://github.com/dynatrace-oss/dtctl)
 **Installation:** `/usr/local/bin/dtctl`
 
-`dtctl` is a kubectl-style command-line tool for Dynatrace. It complements the Copilot + MCP workflow by providing direct terminal access to Dynatrace resources — running DQL queries, managing workflows, verifying notebooks, and more.
+`dtctl` is a kubectl-style command-line tool for Dynatrace. It complements the Copilot + MCP workflow by providing direct terminal access to Dynatrace resources. It runs DQL queries, manages workflows, verifies notebooks, and more.
 
-In this workspace, `dtctl` is used primarily for **verification** — confirming that notebooks and other artifacts created by Copilot via MCP actually exist and are correctly structured in Dynatrace.
+In this workspace, `dtctl` is used primarily for **verification** by confirming that notebooks and other artifacts created by Copilot via MCP actually exist and are correctly structured in Dynatrace.
 
 ```bash
 dtctl get notebooks                    # List all notebooks
@@ -265,7 +264,7 @@ Update `dtctl` by re-running the install script:
 curl -fsSL https://raw.githubusercontent.com/dynatrace-oss/dtctl/main/install.sh | bash
 ```
 
-Version baseline note: this workspace moved from dtctl v0.26.x guidance to v0.27.0+ in May 2026. For auditability, treat `skills-lock.json` hashes as the source-of-truth snapshot for committed skill content.
+For auditability, treat `skills-lock.json` hashes as the source-of-truth snapshot for committed skill content.
 
 ---
 
@@ -273,7 +272,7 @@ Version baseline note: this workspace moved from dtctl v0.26.x guidance to v0.27
 
 | Component | Source |
 |---|---|
-| 13 Dynatrace skills | [github.com/Dynatrace/dynatrace-for-ai](https://github.com/Dynatrace/dynatrace-for-ai) |
-| 7 investigation prompts | [github.com/Dynatrace/dynatrace-for-ai/prompts](https://github.com/Dynatrace/dynatrace-for-ai/tree/main/prompts) |
+| Dynatrace skills | [github.com/Dynatrace/dynatrace-for-ai](https://github.com/Dynatrace/dynatrace-for-ai) |
+| Investigation prompts | [github.com/Dynatrace/dynatrace-for-ai/prompts](https://github.com/Dynatrace/dynatrace-for-ai/tree/main/prompts) |
 | MCP server package | [github.com/dynatrace-oss/dynatrace-mcp](https://github.com/dynatrace-oss/dynatrace-mcp) |
 | dtctl CLI + skill | [github.com/dynatrace-oss/dtctl](https://github.com/dynatrace-oss/dtctl) |

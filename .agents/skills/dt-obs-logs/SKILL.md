@@ -72,6 +72,8 @@ fetch logs, from:now() - 1h
 | limit 100
 ```
 
+**📖 Learn more**: See [Log Querying](references/log-querying.md) for advanced severity filtering, content search, entity filtering, and time range patterns.
+
 ### 2. Log Filtering
 Narrow down logs using multiple criteria (severity, entity, content).
 
@@ -90,6 +92,8 @@ fetch logs, from:now() - 2h
 | fieldsAdd process_group = dt.process_group.detected_name
 | sort `count()` desc
 ```
+
+**📖 Learn more**: See [Log Querying](references/log-querying.md) for multi-criteria filtering and aggregation-by-entity patterns.
 
 ### 3. Pattern Analysis
 Identify patterns, trends, and anomalies in log data.
@@ -114,6 +118,8 @@ fetch logs, from:now() - 2h
     timeout_count = countIf(has_timeout == true),
     by: {process_group = dt.process_group.detected_name}
 ```
+
+**📖 Learn more**: See [Pattern Analysis](references/pattern-analysis.md) for JSON parsing, keyword mining, log volume trends, and baseline comparisons.
 
 ## Key Functions
 
@@ -167,6 +173,8 @@ fetch logs, from:now() - 2h
 | sort time_bucket asc
 ```
 
+**📖 Learn more**: See [Error Analysis](references/error-analysis.md) for per-service error rates, spike detection, exception breakdowns, and period comparisons.
+
 ### Top Error Messages
 Find most common errors:
 ```dql
@@ -217,6 +225,8 @@ fetch logs, from:now() - 4h
 - Filter logs with `contains()` **before** `parse` to reduce parsing overhead
 - Works with any JSON-structured field, not just `content`
 
+**📖 Learn more**: See [Pattern Analysis](references/pattern-analysis.md) for GROK-style parsing, latency extraction from JSON logs, and structured field aggregation.
+
 ## Best Practices
 
 1. **Always specify time ranges** - Use `from:now() - <duration>` to limit data
@@ -234,12 +244,21 @@ fetch logs, from:now() - 4h
 - **Content search**: Full-text search capabilities via `matchesPhrase()`
 - **Aggregation**: Statistical analysis using `summarize` and conditional functions
 
+**📖 Learn more**: See [Log Correlation](references/log-correlation.md) for trace/span correlation, problem time-window analysis, and Kubernetes context correlation.
+
 ## Limitations & Notes
 
 - Log availability depends on OneAgent configuration and log ingestion
 - Full-text search (`matchesPhrase`) may have performance implications on large datasets
 - Entity names require proper OneAgent monitoring for resolution
 - Time ranges should be reasonable (avoid unbounded queries)
+
+## References
+
+- **[Log Querying](references/log-querying.md)** - Severity filtering, content search, entity filtering, time ranges, aggregations
+- **[Error Analysis](references/error-analysis.md)** - Error rates, top errors, exception analysis, spike detection, period comparisons
+- **[Pattern Analysis](references/pattern-analysis.md)** - JSON parsing, GROK patterns, keyword mining, volume trends, baseline comparison
+- **[Log Correlation](references/log-correlation.md)** - Trace/span joins, problem correlation, metrics alignment, Kubernetes context
 
 ## Related Skills
 
