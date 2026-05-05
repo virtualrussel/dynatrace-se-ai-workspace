@@ -25,7 +25,7 @@ Together they turn natural language questions into accurate, live production ins
 
 ## Before You Start
 
-Open VS Code with the `dynatrace-ai-workspace` folder and confirm Copilot Chat is visible on the right side of the screen.
+Open VS Code with the `dynatrace-se-ai-workspace` folder and confirm Copilot Chat is visible on the right side of the screen.
 
 **Quick smoke test** — type this in Copilot Chat:
 ```

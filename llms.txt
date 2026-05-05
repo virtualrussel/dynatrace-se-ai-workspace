@@ -1,4 +1,4 @@
-# Dynatrace AI Workspace
+# Dynatrace SE AI Workspace
 
 A pre-configured AI assistant workspace for Dynatrace observability workflows, compatible with both Claude Code and GitHub Copilot. Skills, prompts, and MCP server connections are ready to use — load the workspace and start investigating without any additional setup.
 

@@ -1,4 +1,4 @@
-# Dynatrace AI Workspace — Session Briefing
+# Dynatrace SE AI Workspace — Session Briefing
 
 ## Environment
 

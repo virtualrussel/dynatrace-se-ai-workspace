@@ -1,4 +1,4 @@
-# Dynatrace AI Workspace — Cheat Sheet
+# Dynatrace SE AI Workspace — Cheat Sheet
 
 **Use this to pick the right workflow, not write DQL.**
 
