@@ -1,8 +1,8 @@
 # dynatrace-se-ai-workspace
 
-An AI-powered observability workspace for Dynatrace — combining GitHub Copilot or Claude AI, the Dynatrace MCP server, and the [dynatrace-for-ai](https://github.com/Dynatrace/dynatrace-for-ai) skills framework to accelerate incident triage, root cause analysis, and day-to-day observability workflows.
+An AI-powered observability workspace for Dynatrace that combines GitHub Copilot or Claude AI, the Dynatrace MCP server, dtctl, and the [dynatrace-for-ai](https://github.com/Dynatrace/dynatrace-for-ai) skills framework to accelerate incident triage, root cause analysis, and day-to-day observability workflows.
 
-> **What this gives you:** Ask AI natural language questions about your Dynatrace environment and get accurate, production-aware answers — powered by verified domain knowledge, live API access, and pre-built investigation workflows.
+> **What this gives you:** Ask AI natural language questions about your Dynatrace environment and get accurate, production-aware answers. All powered by verified domain knowledge, live API access, and pre-built investigation workflows.
 
 > **New here?** Start with [docs/ELI5.md](./docs/ELI5.md) for a quick setup, then read [docs/OVERVIEW.md](./docs/OVERVIEW.md) for the big-picture operating model.
 
@@ -53,7 +53,7 @@ dynatrace-se-ai-workspace/
 | [GitHub Copilot](https://github.com/features/copilot) | AI assistant (option 1) |
 | [Claude Code](https://claude.ai/code) | AI assistant (option 2) |
 | [Node.js](https://nodejs.org/) v18+ | Required to run the MCP server |
-| [dtctl](https://github.com/dynatrace-oss/dtctl) | **Required.** Dynatrace open-source CLI for agents & humans to manage observability resources (use v0.27.0 or newer) |
+| [dtctl](https://github.com/dynatrace-oss/dtctl) | Dynatrace open-source CLI for agents & humans to manage observability resources (use v0.27.0 or newer) |
 | A Dynatrace environment | `https://<env>.apps.dynatrace.com` or `https://<env>.sprint.apps.dynatracelabs.com` |
 
 You must use one AI assistant path: **GitHub Copilot** or **Claude Code**.
@@ -62,17 +62,17 @@ You must use one AI assistant path: **GitHub Copilot** or **Claude Code**.
 
 ## Setup
 
-> **Dynatrace employees & partners:** This workspace is pre-configured for the standard
+> **Dynatrace employees & partners:** This workspace is pre-configured for the 
 > Dynatrace demo environment (`guu84124.apps.dynatrace.com`). No changes are
-> required to run demos against the production demo tenant. Clone the repo,
+> required to run demonstrations against the production demo tenant. Clone the repo,
 > run `dtctl auth login --context production --environment "https://guu84124.apps.dynatrace.com"`,
 > reload VS Code, and authenticate via your Dynatrace SSO when prompted.
 
 ### Choose Your Frontend
 
 This workspace works with:
-- **GitHub Copilot** in VS Code (requires subscription)
-- **Claude Code** via web or desktop (requires Claude Pro or Team)
+- **GitHub Copilot** in VS Code (subscription required)
+- **Claude Code** via web or desktop (Claude Pro or Team required)
 
 Select your setup path below. Both receive the same skills, prompts, and MCP server access.
 
@@ -102,15 +102,12 @@ npx skills add dynatrace-oss/dtctl
 
 > See [Keeping Up to Date](#keeping-up-to-date) for when to run this.
 
-### 3. Configure dtctl for the shared demo tenant
+### 3. Configure dtctl for the demo tenant
 
 `dtctl` is used for terminal-level verification and resource management. It is
 required for demo workflows in this workspace.
 
-> Compatibility note: use `dtctl` v0.27.0 or newer. v0.27.0 adds
-> post-apply hooks for automation, new document query flags (--filter,
-> --sort, --add-fields), breaking changes to settings addressing (use
-> objectId instead of UUID), and improved pre-apply hook output visibility.
+> Compatibility note: use `dtctl` v0.27.0 or newer.
 
 ```bash
 # macOS / Linux — direct install (no package manager required)
@@ -138,11 +135,10 @@ If you are in Codespaces and see `keyring probe failed` or `dbus-launch` errors,
 
 The workspace is pre-configured with two MCP servers — the shared demo tenant
 (`guu84124`) and a secondary sprint tenant (`bon05374`). The `bon05374` entry is
-specific to the original author — replace it with your own tenant ID if you want
+specific to the original author and you will need to replace it with your own tenant ID if you want
 to connect a second environment.
 
-> If you only need the shared demo tenant (`guu84124`), skip this section entirely —
-> no additional configuration is required.
+> If you only need the shared demo tenant (`guu84124`), skip this section entirely. No additional configuration is required.
 
 Complete all four steps below to configure your own secondary tenant. Skipping
 any step will result in Copilot referencing a server that doesn't exist or

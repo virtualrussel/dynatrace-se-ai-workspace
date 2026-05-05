@@ -1,6 +1,6 @@
 # ELI5 — Get This Working in 15 Minutes
 
-You are setting up an AI assistant that can answer questions about your Dynatrace environment in plain English. Type a question, get a real answer from live production data.
+You are setting up an AI assistant that can answer questions about your Dynatrace environment using natural language. Type a question and get a real answer from live production data.
 
 ---
 
