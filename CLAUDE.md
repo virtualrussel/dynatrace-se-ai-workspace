@@ -18,6 +18,18 @@ To target a specific environment for a session:
 Broad queries without problem context hit Dynatrace's 500GB scan limit and return zero results.
 All investigation workflows enforce this automatically.
 
+## Tool Priority
+
+**Default to MCP tools and the `dt-obs-*` / `dt-app-*` / `dt-dql-essentials` skills** for telemetry reads, problem and RCA analysis, log and trace exploration, and dashboard/notebook content lookups.
+
+Use the `dtctl` skill for:
+- Resource lifecycle: `apply`, `delete`, `share`, `unshare`, `history`, `restore`
+- Workflow / function / analyzer execution (`dtctl exec`)
+- Bulk or scripted operations and CI/CD-style automation
+- Tasks not exposed via MCP, or when the user explicitly asks for the CLI
+
+When both paths can satisfy a request, prefer MCP.
+
 ## Prompts
 
 Type `@` to access these slash commands:
