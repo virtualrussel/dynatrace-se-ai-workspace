@@ -30,6 +30,8 @@ Use the `dtctl` skill for:
 
 When both paths can satisfy a request, prefer MCP.
 
+**Never substitute one resource type for another to fit an available tool.** If the user asks for a dashboard and only a notebook tool is available via MCP, route to `dtctl` for the dashboard. Refusal-then-route is preferred over delivering a different artifact than requested.
+
 ## Prompts
 
 Type `@` to access these slash commands:
