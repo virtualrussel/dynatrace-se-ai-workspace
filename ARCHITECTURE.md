@@ -180,9 +180,9 @@ The two files are identical in content but kept separate because each tool requi
 **Source:** [github.com/dynatrace-oss/dtctl](https://github.com/dynatrace-oss/dtctl)
 **Installation:** `/usr/local/bin/dtctl`
 
-`dtctl` is a kubectl-style command-line tool for Dynatrace. It complements the Copilot + MCP workflow by providing direct terminal access to Dynatrace resources. It runs DQL queries, manages workflows, verifies notebooks, and more.
+`dtctl` is a kubectl-style command-line tool for Dynatrace. It covers resource lifecycle operations (apply, delete, share, history, restore), workflow and analyzer execution, and bulk or CI/CD-style automation. Use it when operations aren't exposed via MCP or when scripting is the goal.
 
-In this workspace, `dtctl` is used primarily for **verification** by confirming that notebooks and other artifacts created by Copilot via MCP actually exist and are correctly structured in Dynatrace.
+In this workspace, `dtctl` is commonly used for **verification** — confirming that notebooks and other artifacts created by Copilot via MCP actually exist and are correctly structured in Dynatrace — but it is not limited to that role.
 
 ```bash
 dtctl get notebooks                    # List all notebooks
