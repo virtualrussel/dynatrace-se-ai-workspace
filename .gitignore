@@ -3,3 +3,4 @@
 .claude/settings.local.json
 .claude/*.local.json
 .claude/.credentials.json
+.claude/worktrees/

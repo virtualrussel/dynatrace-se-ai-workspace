@@ -104,8 +104,7 @@ npx skills add dynatrace-oss/dtctl
 
 ### 3. Configure dtctl for the demo tenant
 
-`dtctl` is used for terminal-level verification and resource management. It is
-required for demo workflows in this workspace.
+`dtctl` handles resource lifecycle (apply, delete, share, history, restore), workflow and analyzer execution, and bulk or CI/CD-style automation from the terminal. It is required for demo workflows in this workspace.
 
 > Compatibility note: use `dtctl` v0.27.0 or newer.
 
