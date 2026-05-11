@@ -77,22 +77,22 @@ This means all 16 skills can be installed without performance penalty — Copilo
 
 | Skill | Domain |
 |---|---|
-| `dt-dql-essentials` | DQL syntax, pitfalls, query patterns — required before any DQL |
-| `dt-obs-problems` | Davis Problems, root cause analysis, impact assessment |
-| `dt-obs-logs` | Log queries, filtering, error classification |
-| `dt-obs-tracing` | Distributed traces, spans, failure detection |
-| `dt-obs-services` | RED metrics, SLA tracking, runtime monitoring |
-| `dt-obs-hosts` | Host and process metrics |
-| `dt-obs-kubernetes` | Pods, workloads, nodes, cluster health |
-| `dt-obs-aws` | EC2, RDS, Lambda, ECS/EKS, cost optimization |
-| `dt-obs-azure` | Compute, VNet, storage, security, cost optimization, serverless, messaging |
-| `dt-obs-gcp` | GKE, Compute, IAM, Pub/Sub, serverless containers, monitoring |
-| `dt-obs-predictive-analytics` | Anomaly scoring, capacity forecasting, novelty and trend detection |
-| `dt-obs-frontends` | RUM, Web Vitals, user sessions, mobile crashes |
-| `dt-app-dashboards` | Dashboard JSON creation and modification |
-| `dt-app-notebooks` | Notebook creation and analytics workflows |
-| `dt-migration` | Classic entity DQL → Smartscape migration |
-| `dtctl` | CLI commands for managing Dynatrace resources |
+| `dt-dql-essentials` | Core DQL syntax rules, common pitfalls, and query patterns — load before writing any DQL |
+| `dt-obs-problems` | DAVIS problem analysis, root cause identification, impact assessment, and correlation with other telemetry |
+| `dt-obs-logs` | Log querying, filtering, pattern analysis, and error rate calculation |
+| `dt-obs-tracing` | Distributed traces, spans, service dependencies, and request flow analysis |
+| `dt-obs-services` | RED metrics (Rate, Errors, Duration) and runtime-specific telemetry for Java, .NET, Node.js, Python, PHP, and Go |
+| `dt-obs-hosts` | Host and process metrics — CPU, memory, disk, network, containers, and process-level telemetry |
+| `dt-obs-kubernetes` | Kubernetes cluster, pod, node, and workload monitoring — health, pod failures, OOMKills, scheduling, and security posture |
+| `dt-obs-aws` | AWS cloud resources — EC2, RDS, Lambda, ECS/EKS, VPC, load balancers, S3, DynamoDB, SQS/SNS, and cost optimization |
+| `dt-obs-azure` | Azure cloud resources — VMs, VMSS, SQL Database, Storage, AKS, App Service, Functions, VNet, Event Hubs, Container Apps, and Key Vault |
+| `dt-obs-gcp` | GCP cloud resources — Compute Engine, GKE, Cloud Run, Pub/Sub, VPC networking, DNS, IAM, Secret Manager, and monitoring |
+| `dt-obs-predictive-analytics` | Time series forecasting, capacity saturation planning, trend and anomaly detection across hosts, services, and infrastructure |
+| `dt-obs-frontends` | RUM, Web Vitals, user sessions, mobile crashes, page performance, user interactions, and frontend errors |
+| `dt-app-dashboards` | Create, modify, query, and analyze dashboard JSON — tiles, layouts, DQL queries, variables, and visualizations |
+| `dt-app-notebooks` | Create, modify, query, and analyze notebook JSON — sections, DQL queries, visualizations, and markdown documentation |
+| `dt-migration` | Migrate classic entity DQL and entityName/entityAttr/classicEntitySelector patterns to Smartscape equivalents |
+| `dtctl` | CLI for Dynatrace resource lifecycle — apply, delete, share, history, restore; workflow execution; bulk and CI/CD automation |
 
 ---
 

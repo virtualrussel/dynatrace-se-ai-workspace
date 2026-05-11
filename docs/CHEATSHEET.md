@@ -41,20 +41,20 @@ Skills are loaded automatically when relevant. You can also ask for one directly
 
 | Ask about... | Skill used |
 |---|---|
-| Service error rates, latency, throughput | `dt-obs-services` |
-| Kubernetes pods, workloads, crash loops | `dt-obs-kubernetes` |
-| Host CPU, memory, disk, processes | `dt-obs-hosts` |
-| Frontend performance, Web Vitals, RUM | `dt-obs-frontends` |
-| Distributed traces, request flows | `dt-obs-tracing` |
-| Log search and pattern analysis | `dt-obs-logs` |
-| Problem RCA and impact scope | `dt-obs-problems` |
-| AWS resources and infrastructure | `dt-obs-aws` |
-| Azure resources and infrastructure | `dt-obs-azure` |
-| GCP resources and infrastructure | `dt-obs-gcp` |
-| Predictive analytics, capacity forecasting, anomaly scoring | `dt-obs-predictive-analytics` |
-| Dashboards — create or modify | `dt-app-dashboards` |
-| Notebooks — create or modify | `dt-app-notebooks` |
-| Terminal / CLI operations | `dtctl` |
+| Service error rates, latency, throughput, RED metrics, runtime monitoring (Java, .NET, Node.js) | `dt-obs-services` |
+| Kubernetes pods, workloads, nodes, OOMKills, scheduling, security posture | `dt-obs-kubernetes` |
+| Host CPU, memory, disk, network, containers, process-level telemetry | `dt-obs-hosts` |
+| Frontend performance, Web Vitals, RUM, user sessions, mobile crashes, frontend errors | `dt-obs-frontends` |
+| Distributed traces, spans, service dependencies, request flow analysis | `dt-obs-tracing` |
+| Log querying, filtering, pattern analysis, error rates | `dt-obs-logs` |
+| Problem RCA, root cause identification, impact assessment, DAVIS correlation | `dt-obs-problems` |
+| AWS — EC2, RDS, Lambda, ECS/EKS, VPC, S3, DynamoDB, SQS/SNS, cost optimization | `dt-obs-aws` |
+| Azure — VMs, AKS, App Service, Functions, VNet, Event Hubs, Container Apps, Key Vault | `dt-obs-azure` |
+| GCP — Compute Engine, GKE, Cloud Run, Pub/Sub, VPC, IAM, Secret Manager | `dt-obs-gcp` |
+| Time series forecasting, capacity saturation, trend and anomaly detection | `dt-obs-predictive-analytics` |
+| Dashboards — create, modify, query, or analyze | `dt-app-dashboards` |
+| Notebooks — create, modify, query, or analyze | `dt-app-notebooks` |
+| Resource lifecycle, workflow execution, bulk/CI-CD automation via CLI | `dtctl` |
 | Writing any DQL query | `dt-dql-essentials` (always load first) |
 
 ---
