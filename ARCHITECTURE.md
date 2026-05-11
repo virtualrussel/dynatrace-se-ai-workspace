@@ -40,7 +40,7 @@ This workspace solves all four problems by combining three things: domain knowle
 │             │                                 │                   │
 │    ┌────────▼────────┐                        │                   │
 │    │  Agent Skills   │                        │                   │
-│    │   (13 skills)   │                        │                   │
+│    │   (16 skills)   │                        │                   │
 │    │ .agents/skills/ │                        │                   │
 │    └────────┬────────┘                        │                   │
 └─────────────┼─────────────────────────────────┼───────────────────┘
@@ -73,7 +73,7 @@ Tier 2 — SKILL.md    On demand        ~5,000 tokens
 Tier 3 — references/ On demand        Deep reference detail
 ```
 
-This means all 13 skills can be installed without performance penalty — Copilot only loads what it needs for each specific query.
+This means all 16 skills can be installed without performance penalty — Copilot only loads what it needs for each specific query.
 
 | Skill | Domain |
 |---|---|
@@ -85,6 +85,9 @@ This means all 13 skills can be installed without performance penalty — Copilo
 | `dt-obs-hosts` | Host and process metrics |
 | `dt-obs-kubernetes` | Pods, workloads, nodes, cluster health |
 | `dt-obs-aws` | EC2, RDS, Lambda, ECS/EKS, cost optimization |
+| `dt-obs-azure` | Compute, VNet, storage, security, cost optimization, serverless, messaging |
+| `dt-obs-gcp` | GKE, Compute, IAM, Pub/Sub, serverless containers, monitoring |
+| `dt-obs-predictive-analytics` | Anomaly scoring, capacity forecasting, novelty and trend detection |
 | `dt-obs-frontends` | RUM, Web Vitals, user sessions, mobile crashes |
 | `dt-app-dashboards` | Dashboard JSON creation and modification |
 | `dt-app-notebooks` | Notebook creation and analytics workflows |
@@ -165,7 +168,7 @@ Each file contains:
 - Default and fallback MCP server
 - Global rule: always start with problems, never broad log searches
 - Prompt directory — all 7 slash commands and when to use them
-- Note that 13 skills are installed and load automatically
+- Note that 16 skills are installed and load automatically
 
 The two files are identical in content but kept separate because each tool requires a specific path:
 - GitHub Copilot reads only `.github/copilot-instructions.md`

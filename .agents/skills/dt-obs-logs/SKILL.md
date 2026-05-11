@@ -1,6 +1,14 @@
 ---
 name: dt-obs-logs
-description: Log queries, filtering, pattern analysis, and log correlation. Search and analyze application and infrastructure logs.
+description: >-
+  Log querying, filtering, pattern analysis, and error rate calculation. Use when searching
+  application or infrastructure logs, analyzing error patterns, or correlating log data.
+  Trigger: "show error logs", "search logs for keyword", "log error rate", "recent errors",
+  "logs from last hour", "find log entries", "top error messages", "log patterns",
+  "parse JSON logs", "logs by process group", "log trends over time",
+  "log entry counts per minute".
+  Do NOT use for explaining existing queries, product documentation questions,
+  distributed tracing or span analysis (use dt-obs-tracing).
 license: Apache-2.0
 ---
 
@@ -16,8 +24,13 @@ Query, filter, and analyze Dynatrace log data using DQL for troubleshooting and 
 - Analyzing log patterns and trends
 - Grouping and aggregating log data by dimensions
 
-## When to Use This Skill
+> **Cross-source join required:** If the query must combine logs with host attributes
+> (OS type, hostname, IP address, cloud provider) → also read
+> `dt-dql-essentials/references/smartscape-topology-navigation.md` before writing the query.
 
+---
+
+## Use Cases
 Use this skill when users want to:
 - Find specific log entries (e.g., "show me error logs from the last hour")
 - Filter logs by severity, process group, or content
@@ -72,8 +85,6 @@ fetch logs, from:now() - 1h
 | limit 100
 ```
 
-**📖 Learn more**: See [Log Querying](references/log-querying.md) for advanced severity filtering, content search, entity filtering, and time range patterns.
-
 ### 2. Log Filtering
 Narrow down logs using multiple criteria (severity, entity, content).
 
@@ -92,8 +103,6 @@ fetch logs, from:now() - 2h
 | fieldsAdd process_group = dt.process_group.detected_name
 | sort `count()` desc
 ```
-
-**📖 Learn more**: See [Log Querying](references/log-querying.md) for multi-criteria filtering and aggregation-by-entity patterns.
 
 ### 3. Pattern Analysis
 Identify patterns, trends, and anomalies in log data.
@@ -119,13 +128,11 @@ fetch logs, from:now() - 2h
     by: {process_group = dt.process_group.detected_name}
 ```
 
-**📖 Learn more**: See [Pattern Analysis](references/pattern-analysis.md) for JSON parsing, keyword mining, log volume trends, and baseline comparisons.
-
 ## Key Functions
 
 ### Filtering
 - `filter status == "ERROR"` - Filter by status level
-- `in(status, "ERROR", "FATAL", "WARN")` - Multi-status filter
+- `in(status, {"ERROR", "FATAL", "WARN"})` - Multi-status filter (use curly braces for literal sets)
 - `contains(content, "keyword")` - Simple substring search
 - `matchesPhrase(content, "exact phrase")` - Full-text phrase search
 
@@ -172,8 +179,6 @@ fetch logs, from:now() - 2h
 | fieldsAdd error_rate = (error_logs * 100.0) / total_logs
 | sort time_bucket asc
 ```
-
-**📖 Learn more**: See [Error Analysis](references/error-analysis.md) for per-service error rates, spike detection, exception breakdowns, and period comparisons.
 
 ### Top Error Messages
 Find most common errors:
@@ -225,8 +230,6 @@ fetch logs, from:now() - 4h
 - Filter logs with `contains()` **before** `parse` to reduce parsing overhead
 - Works with any JSON-structured field, not just `content`
 
-**📖 Learn more**: See [Pattern Analysis](references/pattern-analysis.md) for GROK-style parsing, latency extraction from JSON logs, and structured field aggregation.
-
 ## Best Practices
 
 1. **Always specify time ranges** - Use `from:now() - <duration>` to limit data
@@ -244,8 +247,6 @@ fetch logs, from:now() - 4h
 - **Content search**: Full-text search capabilities via `matchesPhrase()`
 - **Aggregation**: Statistical analysis using `summarize` and conditional functions
 
-**📖 Learn more**: See [Log Correlation](references/log-correlation.md) for trace/span correlation, problem time-window analysis, and Kubernetes context correlation.
-
 ## Limitations & Notes
 
 - Log availability depends on OneAgent configuration and log ingestion
@@ -253,12 +254,15 @@ fetch logs, from:now() - 4h
 - Entity names require proper OneAgent monitoring for resolution
 - Time ranges should be reasonable (avoid unbounded queries)
 
-## References
+## Troubleshooting
 
-- **[Log Querying](references/log-querying.md)** - Severity filtering, content search, entity filtering, time ranges, aggregations
-- **[Error Analysis](references/error-analysis.md)** - Error rates, top errors, exception analysis, spike detection, period comparisons
-- **[Pattern Analysis](references/pattern-analysis.md)** - JSON parsing, GROK patterns, keyword mining, volume trends, baseline comparison
-- **[Log Correlation](references/log-correlation.md)** - Trace/span joins, problem correlation, metrics alignment, Kubernetes context
+| Problem | Cause | Solution |
+|---------|-------|----------|
+| No logs returned | Missing time range or too narrow | Widen `from:` window; verify log ingestion is active |
+| `getNodeName()` returns null | OneAgent not monitoring the entity or entity not yet resolved | Verify OneAgent is deployed and entity is discovered; use `dt.process_group.detected_name` as a reliable alternative |
+| `matchesPhrase()` slow on large data | Full-text search without pre-filtering | Add `filter status == "ERROR"` before `matchesPhrase()` |
+| Wrong field name `log.level` | Common mistake | Use `loglevel` (no dot) for severity; see dt-dql-essentials |
+| Empty `content` field | Log line was empty or not ingested | Check log source configuration in OneAgent |
 
 ## Related Skills
 
