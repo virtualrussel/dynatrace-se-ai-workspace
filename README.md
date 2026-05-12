@@ -53,7 +53,7 @@ dynatrace-se-ai-workspace/
 | [GitHub Copilot](https://github.com/features/copilot) | AI assistant (option 1) |
 | [Claude Code](https://claude.ai/code) | AI assistant (option 2) |
 | [Node.js](https://nodejs.org/) v18+ | Required to run the MCP server |
-| [dtctl](https://github.com/dynatrace-oss/dtctl) | Dynatrace open-source CLI for agents & humans to manage observability resources (use v0.27.0 or newer) |
+| [dtctl](https://github.com/dynatrace-oss/dtctl) | Dynatrace open-source CLI for agents & humans to manage observability resources (use v0.27.1 or newer) |
 | A Dynatrace environment | `https://<env>.apps.dynatrace.com` or `https://<env>.sprint.apps.dynatracelabs.com` |
 
 You must use one AI assistant path: **GitHub Copilot** or **Claude Code**.
@@ -106,7 +106,7 @@ npx skills add dynatrace-oss/dtctl
 
 `dtctl` handles resource lifecycle (apply, delete, share, history, restore), workflow and analyzer execution, and bulk or CI/CD-style automation from the terminal. It is required for demo workflows in this workspace.
 
-> Compatibility note: use `dtctl` v0.27.0 or newer.
+> Compatibility note: use `dtctl` v0.27.1 or newer.
 
 ```bash
 # macOS / Linux — direct install (no package manager required)
@@ -126,7 +126,7 @@ dtctl config set-credentials production-token --token <YOUR_PLATFORM_TOKEN>
 dtctl doctor
 ```
 
-Create your platform token in Dynatrace: Identity & Access Management → Access Tokens → Generate new token → Platform token.
+Create your platform token at https://myaccount.dynatrace.com/platformTokens (Account Management portal — not the IAM Access Tokens page, which manages classic `dt0c01.*` tokens).
 
 If you are in Codespaces and see `keyring probe failed` or `dbus-launch` errors, skip OAuth and use token-based auth.
 
@@ -390,11 +390,9 @@ git push
 
 ### dtctl Version Transition Record
 
-This repository baseline moved from v0.26.x to v0.27.0+ in May 2026.
-
-- Previous baseline: v0.26.2 guidance
-- Current baseline: v0.27.0 or newer
-- Transition commit: `f857a23` (docs and skill guidance updates)
+- v0.26.x → v0.27.0 (May 2026, commit `f857a23`): document API query flags, settings addressing, hook syntax changes
+- v0.27.0 → v0.27.1 (May 2026): `--filter` type constraint fix, `--add-fields` carry-through fix, `--mine` platform token fix, anomaly-detector round-trip, coloring guidance rewrite
+- Current baseline: v0.27.1 or newer
 
 Note: `skills-lock.json` records source and content hash snapshots for skills, not a separate semantic `dtctlVersion` field.
 

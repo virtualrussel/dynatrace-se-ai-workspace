@@ -63,7 +63,7 @@ Skills are loaded automatically when relevant. You can also ask for one directly
 
 `dtctl` is the CLI-side of this workspace (all dtctl examples below are terminal commands). Use it when you want to verify, query, or manage resources from the terminal rather than through chat.
 
-Compatibility: use `dtctl` v0.27.0 or newer. v0.27.0 adds post-apply hooks, new document API query flags (--filter, --sort, --add-fields, --admin-access), and breaking changes to settings addressing.
+Compatibility: use `dtctl` v0.27.1 or newer. v0.27.0 adds post-apply hooks, new document API query flags (--filter, --sort, --add-fields, --admin-access), and breaking changes to settings addressing.
 
 | Task | Command |
 |------|---------|
@@ -77,8 +77,11 @@ Compatibility: use `dtctl` v0.27.0 or newer. v0.27.0 adds post-apply hooks, new 
 | Include extra document metadata | `dtctl get documents --add-fields "originExtensionId,labels,shareInfo.isShared"` |
 | Switch environments | `dtctl config use-context production` / `dtctl config use-context sprint` |
 
-v0.27.0 notes:
-- `dtctl doctor` may show a user-identity warning for platform tokens while still passing overall checks.
+v0.27.1 notes:
+- `dtctl doctor` may show a user-identity warning for platform tokens while still passing overall checks. Grant `app-engine:apps:run` scope to resolve it fully.
+- `--filter` on `get dashboards`/`get notebooks` now correctly restricts by type (previously returned mixed document types).
+- `--add-fields` fields are now fully carried through (was silently dropped in v0.27.0).
+- `--mine` now works with platform tokens (previously crashed with a JWT parse error).
 - Settings object operations should use `objectId` from `dtctl get settings -o json`, not legacy synthetic UID values.
 
 The AI workflows and dtctl point at the same environment — use chat for investigation, dtctl for spot-checks and verification.

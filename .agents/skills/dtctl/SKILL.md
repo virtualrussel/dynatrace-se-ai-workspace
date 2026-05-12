@@ -30,7 +30,7 @@ This displays:
 - Safety level (readonly, readwrite-mine, readwrite-all, dangerously-unrestricted)
 - Authenticated user identity (name, email, UUID)
 
-If you authenticate with a platform token, `dtctl doctor` on v0.27.0+ may show a user-identity warning while still passing overall auth checks.
+If you authenticate with a platform token, `dtctl doctor` on v0.27.1+ may show a user-identity warning while still passing overall auth checks.
 
 ## DQL Reference Usage
 
@@ -51,6 +51,7 @@ dtctl uses a uniform pattern for all resource types. Discover schema from actual
 | Resource | Aliases |
 |----------|---------|
 | analyzer | analyzers |
+| anomaly-detector | anomaly-detectors |
 | app | apps |
 | bucket | bkt |
 | copilot-skill | copilot-skills |
@@ -214,9 +215,9 @@ dtctl query "timeseries avg(dt.host.cpu.usage)" -o chart --plain
 dtctl verify query --client-context "health-check" 'fetch dt.davis.problems | limit 5'
 ```
 
-## v0.27.0 Compatibility Notes
+## v0.27.x Compatibility Notes
 
-This workspace assumes `dtctl` v0.27.0 or newer.
+This workspace assumes `dtctl` v0.27.1 or newer.
 
 Key v0.27 changes to account for when troubleshooting or writing automation:
 - Document API query capabilities on documents/dashboards/notebooks via `--filter`, `--sort`, `--add-fields`, and `--admin-access`.
@@ -225,6 +226,12 @@ Key v0.27 changes to account for when troubleshooting or writing automation:
 - Settings addressing updates: use API `objectId` for scripting rather than synthetic UID patterns.
 
 When scripts or playbooks previously built around v0.26 behavior fail, check these compatibility points first.
+
+v0.27.1 additions:
+- `--filter` on `get dashboards`/`get notebooks` no longer drops the implicit type constraint (previously returned mixed document types)
+- `--add-fields` fields (`originAppId`, `labels`, `shareInfo`, `userContext`) are now fully carried through `get` and `--watch`
+- `--mine` now works with platform tokens (previously crashed with a JWT parse error; requires `app-engine:apps:run` scope for full identity resolution)
+- `anomaly-detector` get → apply round-trip now works (`-o json|yaml` serializes the Settings envelope correctly)
 
 ```bash
 # Document API query controls on document-like resources
@@ -289,7 +296,7 @@ content:
 - **`type: data`** — DQL tile with `query` + `visualization`: `singleValue`, `lineChart`, `areaChart`, `barChart`, `pieChart`, `table`, `honeycomb`, `scatterplot`
 - **`type: markdown`** — static text via `content` field (supports markdown)
 
-For detailed visualizationSettings (singleValue, charts, tables, thresholds, unit overrides), see [references/resources/dashboards.md](references/resources/dashboards.md).
+For detailed visualizationSettings (singleValue, charts, tables, coloring, unit overrides), see [references/resources/dashboards.md](references/resources/dashboards.md).
 
 ### Gotchas
 - Always set `davis.enabled: false` on data tiles.

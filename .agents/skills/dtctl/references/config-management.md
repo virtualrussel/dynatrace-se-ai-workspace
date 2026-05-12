@@ -48,7 +48,7 @@ dtctl get workflows --context staging --plain
 
 Actual permissions depend on API token scopes, not just safety level.
 
-## v0.27.0 Migration Notes
+## v0.27.x Migration Notes
 
 ### Settings objects: use objectId
 
