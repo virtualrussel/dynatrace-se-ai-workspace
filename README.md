@@ -1,6 +1,6 @@
 # dynatrace-se-ai-workspace
 
-An AI-powered observability workspace for Dynatrace that combines GitHub Copilot or Claude AI, the Dynatrace MCP server, dtctl, and the [dynatrace-for-ai](https://github.com/Dynatrace/dynatrace-for-ai) skills framework to accelerate incident triage, root cause analysis, and day-to-day observability workflows.
+An AI-powered observability workspace for Dynatrace that combines GitHub Copilot or Claude Code, the Dynatrace MCP server, dtctl, and the [dynatrace-for-ai](https://github.com/Dynatrace/dynatrace-for-ai) skills framework to accelerate incident triage, root cause analysis, and day-to-day observability workflows.
 
 > **What this gives you:** Ask AI natural language questions about your Dynatrace environment and get accurate, production-aware answers. All powered by verified domain knowledge, live API access, and pre-built investigation workflows.
 
@@ -38,12 +38,12 @@ dynatrace-se-ai-workspace/
 │       └── performance-regression.prompt.md
 ├── .agents/skills/               # 16 Dynatrace domain skills
 ├── .claude/skills/               # Symlinks for Claude Code compatibility
-├── .mcp.json                     # MCP server configuration for GitHub Copilot CLI and Claude Code CLI
+├── .mcp.json                     # MCP server configuration for Claude Code CLI
 ├── .claude/
 │   ├── commands/                 # Symlinked slash commands for Claude Code CLI
 │   └── settings.local.json       # MCP server config and permissions for Claude Code
 ├── .vscode/
-│   ├── mcp.json                  # MCP server configuration for VS Code Copilot
+│   ├── mcp.json                  # MCP server configuration for GitHub Copilot and Claude Code (VS Code extension)
 │   ├── extensions.json           # Recommended VS Code extensions
 │   └── settings.json             # Workspace editor settings
 └── demos/
@@ -52,7 +52,7 @@ dynatrace-se-ai-workspace/
 
 | Tool | Purpose |
 |---|---|
-| [VS Code](https://code.visualstudio.com/) | Editor with Copilot/Claude Chat |
+| [VS Code](https://code.visualstudio.com/) | Editor with Copilot/Claude Chat *(VS Code paths only)* |
 | [GitHub Copilot](https://github.com/features/copilot) | AI assistant (option 1) |
 | [Claude Code](https://claude.ai/code) | AI assistant (option 2) |
 | [Node.js](https://nodejs.org/) v18+ | Required to run the MCP server |
@@ -73,15 +73,17 @@ You must use one AI assistant path: **GitHub Copilot** or **Claude Code**.
 
 ### Choose Your Frontend
 
-This workspace works with:
-- **GitHub Copilot** in VS Code (subscription required)
-- **Claude Code** via web, desktop, or CLI — no VS Code required (Claude Pro or Team required)
+This workspace supports three client paths — all receive the same skills, prompts, and MCP server access:
 
-Select your setup path below. Both receive the same skills, prompts, and MCP server access.
+| Path | Requires | MCP config | Session briefing |
+|---|---|---|---|
+| **GitHub Copilot** (VS Code extension) | VS Code + Copilot subscription | `.vscode/mcp.json` | `.github/copilot-instructions.md` |
+| **Claude Code** (VS Code extension) | VS Code + Claude Pro or Team | `.vscode/mcp.json` | `CLAUDE.md` |
+| **Claude Code CLI** (terminal) | Claude Pro or Team — no VS Code | `.mcp.json` | `CLAUDE.md` |
 
 **GitHub Copilot Path** → Follow Steps 1–6 below. `.github/copilot-instructions.md` is auto-loaded at the start of each Copilot session.
 
-**Claude Code Path** → Follow Steps 1–6 below. `CLAUDE.md` is auto-loaded at the start of each Claude Code session.
+**Claude Code Path (VS Code extension or CLI)** → Follow Steps 1–6 below. `CLAUDE.md` is auto-loaded at the start of each Claude Code session. CLI users skip Step 5.
 
 ### 1. Clone the workspace
 
@@ -91,6 +93,8 @@ cd dynatrace-se-ai-workspace
 ```
 
 Then open the folder in VS Code via **File → Open Folder**.
+
+> **Claude Code CLI users:** Skip opening VS Code. Run `claude` from the repo root instead — MCP and skills activate automatically.
 
 ### 2. Update skills to latest *(optional)*
 
@@ -177,7 +181,7 @@ Replace `<your-tenant-id>` with your personal sprint tenant ID (e.g. `abc12345`)
 
 **Step 4.B — Update `.mcp.json`**
 
-`.mcp.json` is used by Copilot CLI and must stay in sync with `.vscode/mcp.json`.
+`.mcp.json` is used by Claude Code CLI and must stay in sync with `.vscode/mcp.json`.
 Run this command to regenerate it from your updated `.vscode/mcp.json`:
 
 ```bash
@@ -276,7 +280,7 @@ claude                        # starts a CLI session from the repo root
 
 ## Skills
 
-Skills are domain knowledge files that teach Copilot how Dynatrace works — correct DQL syntax, field names, query patterns, and investigation workflows. They load automatically when relevant.
+Skills are domain knowledge files that teach AI assistants how Dynatrace works — correct DQL syntax, field names, query patterns, and investigation workflows. They load automatically when relevant.
 
 Skills follow the [Agent Skills specification](https://agentskills.io/specification) and use progressive disclosure:
 
@@ -339,11 +343,11 @@ The prompts follow a structured drill-down pattern:
 
 ### Why Skills Matter
 
-Copilot without skills will guess DQL syntax — and get it wrong. For example, it might use `event.status == "OPEN"` (doesn't exist) instead of `event.status == "ACTIVE"`, or `log.level` instead of `loglevel`. The skills encode the corrections for known failure modes before Copilot writes a single query.
+Without skills, AI assistants will guess DQL syntax — and get it wrong. For example, they might use `event.status == "OPEN"` (doesn't exist) instead of `event.status == "ACTIVE"`, or `log.level` instead of `loglevel`. The skills encode the corrections for known failure modes before the AI writes a single query.
 
 ### How MCP Works
 
-The Dynatrace MCP server gives Copilot live API access to your environment. When you run `/health-check`, Copilot calls the MCP server to execute real DQL queries and return live data — not cached or synthetic results.
+The Dynatrace MCP server gives AI assistants live API access to your environment. When you run `/health-check`, the AI calls the MCP server to execute real DQL queries and return live data — not cached or synthetic results.
 
 ### The Investigation Rule
 
@@ -356,7 +360,7 @@ This workspace maintains two MCP configuration files that must be kept in sync:
 | File | Used By |
 |---|---|
 | `.vscode/mcp.json` | VS Code GitHub Copilot and Claude Code |
-| `.mcp.json` | GitHub Copilot CLI and Claude Code CLI |
+| `.mcp.json` | Claude Code CLI |
 
 When adding or updating MCP servers, always update both files. Regenerate `.mcp.json` from `.vscode/mcp.json` using:
 

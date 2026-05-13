@@ -65,7 +65,7 @@ This workspace solves all four problems by combining three things: domain knowle
 ### 1. Agent Skills
 **Source:** [github.com/Dynatrace/dynatrace-for-ai](https://github.com/Dynatrace/dynatrace-for-ai) & [github.com/dynatrace-oss/dtctl](https://github.com/dynatrace-oss/dtctl) **Location:** `.agents/skills/`
 
-Skills are markdown files containing domain-specific knowledge. They teach Copilot how Dynatrace works including correct DQL syntax, field names, query patterns, and investigation workflows. Copilot loads them automatically when relevant, using a three-tier progressive disclosure model:
+Skills are markdown files containing domain-specific knowledge. They teach AI assistants how Dynatrace works including correct DQL syntax, field names, query patterns, and investigation workflows. They load automatically when relevant, using a three-tier progressive disclosure model:
 
 ```
 Tier 1 — Catalog     Always loaded    ~100 tokens per skill
@@ -73,7 +73,7 @@ Tier 2 — SKILL.md    On demand        ~5,000 tokens
 Tier 3 — references/ On demand        Deep reference detail
 ```
 
-This means all 16 skills can be installed without performance penalty — Copilot only loads what it needs for each specific query.
+This means all 16 skills can be installed without performance penalty — the AI only loads what it needs for each specific query.
 
 | Skill | Domain |
 |---|---|
@@ -98,7 +98,7 @@ This means all 16 skills can be installed without performance penalty — Copilo
 
 ### 2. MCP Server
 **Source:** [github.com/dynatrace-oss/dynatrace-mcp](https://github.com/dynatrace-oss/dynatrace-mcp)
-**Location:** `.vscode/mcp.json` (VS Code) · `.mcp.json` (Claude Code CLI and GitHub Copilot CLI)
+**Location:** `.vscode/mcp.json` (GitHub Copilot and Claude Code extension — VS Code) · `.mcp.json` (Claude Code CLI)
 
 The Model Context Protocol (MCP) server is the live data bridge between Copilot and Dynatrace. When Copilot needs to answer a question about your environment, it calls the MCP server, which executes real API calls and DQL queries against your Dynatrace tenant and returns live results.
 
@@ -162,7 +162,7 @@ The `troubleshoot-problem` and `daily-standup-notebook` prompts encode operation
 ---
 
 ### 4. Session Briefing Files
-**Locations:** `.github/copilot-instructions.md` (GitHub Copilot) · `CLAUDE.md` (Claude Code)
+**Locations:** `.github/copilot-instructions.md` (GitHub Copilot) · `CLAUDE.md` (Claude Code — VS Code extension and CLI)
 
 Both files are automatically loaded at the start of every AI session in this workspace. They act as a standing briefing — the AI already knows the default MCP environment, the investigation rule, and the available prompts before a single word is typed.
 
@@ -184,7 +184,7 @@ The two files are identical in content but kept separate because each tool requi
 
 `dtctl` is a kubectl-style command-line tool for Dynatrace. It covers resource lifecycle operations (apply, delete, share, history, restore), workflow and analyzer execution, and bulk or CI/CD-style automation. Use it when operations aren't exposed via MCP or when scripting is the goal.
 
-In this workspace, `dtctl` is commonly used for **verification** — confirming that notebooks and other artifacts created by Copilot via MCP actually exist and are correctly structured in Dynatrace — but it is not limited to that role.
+In this workspace, `dtctl` is commonly used for **verification** — confirming that notebooks and other artifacts created by AI workflows via MCP actually exist and are correctly structured in Dynatrace — but it is not limited to that role.
 
 ```bash
 dtctl get notebooks                    # List all notebooks
