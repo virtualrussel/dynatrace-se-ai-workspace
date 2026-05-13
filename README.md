@@ -38,7 +38,10 @@ dynatrace-se-ai-workspace/
 │       └── performance-regression.prompt.md
 ├── .agents/skills/               # 16 Dynatrace domain skills
 ├── .claude/skills/               # Symlinks for Claude Code compatibility
-├── .mcp.json                     # MCP server configuration for Copilot CLI
+├── .mcp.json                     # MCP server configuration for GitHub Copilot CLI and Claude Code CLI
+├── .claude/
+│   ├── commands/                 # Symlinked slash commands for Claude Code CLI
+│   └── settings.local.json       # MCP server config and permissions for Claude Code
 ├── .vscode/
 │   ├── mcp.json                  # MCP server configuration for VS Code Copilot
 │   ├── extensions.json           # Recommended VS Code extensions
@@ -72,7 +75,7 @@ You must use one AI assistant path: **GitHub Copilot** or **Claude Code**.
 
 This workspace works with:
 - **GitHub Copilot** in VS Code (subscription required)
-- **Claude Code** via web or desktop (Claude Pro or Team required)
+- **Claude Code** via web, desktop, or CLI — no VS Code required (Claude Pro or Team required)
 
 Select your setup path below. Both receive the same skills, prompts, and MCP server access.
 
@@ -223,6 +226,8 @@ dtctl config use-context sprint
 
 ### 5. Reload VS Code
 
+> **Claude Code CLI users:** Skip this step — no reload needed. Continue to Step 6.
+
 Press `Cmd+Shift+P` → `Developer: Reload Window`
 
 When you first use a prompt in Copilot Chat, a browser window will open for
@@ -237,9 +242,35 @@ to VS Code. Subsequent sessions authenticate automatically.
 Using the production-mcp server, list the top 5 services by request volume in the last hour
 ```
 
-**Claude Code users:** In Claude Code, type the same query or copy it from the GitHub Copilot instruction above.
+**Claude Code (VS Code extension) users:** In Claude Code, type the same query or copy it from the GitHub Copilot instruction above.
+
+**Claude Code CLI users:** Run `claude` from the repo root. MCP and skills activate automatically. Type `/health-check` to run your first guided workflow, or paste the query above directly.
 
 If you see a table of services with request counts — you are live and ready to demo.
+
+---
+
+## Using without VS Code
+
+Claude Code CLI works without VS Code. Everything that matters — MCP server access, 16 domain skills, the `CLAUDE.md` session briefing, and the 7 investigation workflows — activates automatically when you run `claude` from the repo root.
+
+**What you get out of the box:**
+- MCP servers (`production-mcp` and `sprint-mcp`) — configured in `.mcp.json` and `.claude/settings.local.json`
+- All 16 domain skills — loaded automatically from `.agents/skills/` when relevant
+- Session briefing — `CLAUDE.md` loaded at the start of each session
+- Investigation workflows — accessible as `/health-check`, `/daily-standup`, `/troubleshoot-problem`, etc. (via `.claude/commands/`)
+
+**Setup steps that differ from the VS Code path:**
+- Skip the VS Code install (Step 1 note) — clone the repo and work from the terminal
+- Skip Step 5 (Reload VS Code) — not applicable
+- In Step 6, run `claude` from the repo root and verify with `/health-check` or the example query
+
+**Verify everything is working:**
+```bash
+dtctl doctor                  # confirms dtctl auth and Dynatrace connectivity
+claude                        # starts a CLI session from the repo root
+/health-check                 # runs the first investigation workflow via MCP
+```
 
 ---
 
@@ -279,7 +310,7 @@ Skills follow the [Agent Skills specification](https://agentskills.io/specificat
 Prompts are pre-built investigation workflows available as slash commands.
 
 - **GitHub Copilot:** Type `/` in Copilot Chat (see `.github/prompts/`)
-- **Claude Code:** Type `@` followed by the prompt name (e.g. `@health-check`)
+- **Claude Code:** Type `/` followed by the prompt name (e.g. `/health-check`)
 
 | Prompt | When to Use |
 |---|---|
@@ -325,7 +356,7 @@ This workspace maintains two MCP configuration files that must be kept in sync:
 | File | Used By |
 |---|---|
 | `.vscode/mcp.json` | VS Code GitHub Copilot and Claude Code |
-| `.mcp.json` | GitHub Copilot CLI |
+| `.mcp.json` | GitHub Copilot CLI and Claude Code CLI |
 
 When adding or updating MCP servers, always update both files. Regenerate `.mcp.json` from `.vscode/mcp.json` using:
 

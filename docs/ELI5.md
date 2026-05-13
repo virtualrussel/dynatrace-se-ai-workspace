@@ -14,6 +14,8 @@ You need three things installed:
 | GitHub Copilot or Claude Code | The AI brain | Copilot: sign in at github.com/features/copilot · Claude: sign in at claude.ai/code |
 | [Node.js](https://nodejs.org/) v18+ | Required to run the MCP server — the live data bridge between the AI and your Dynatrace environment | Download LTS version |
 
+> **No VS Code?** You can use Claude Code CLI instead. Skip the VS Code install above. After cloning the repo, run `claude` from the repo root — MCP and skills activate automatically. Then continue to Step 2 (dtctl) and skip Step 3.
+
 ---
 
 ## Step 1 — Get the Workspace
@@ -59,6 +61,8 @@ When `dtctl doctor` shows green, you are connected.
 
 ## Step 3 — Reload VS Code
 
+> **Claude Code CLI users:** Skip this step.
+
 Press `Cmd+Shift+P` → type `Developer: Reload Window` → press Enter.
 
 This activates the Dynatrace live data connection. The first time you use a prompt, a browser window will open for Dynatrace login — complete it and come back.
@@ -67,7 +71,7 @@ This activates the Dynatrace live data connection. The first time you use a prom
 
 ## Step 4 — Try It
 
-In GitHub Copilot Chat, type this prompt. In Claude Code, type the same prompt (or use `@health-check` for a guided workflow):
+In GitHub Copilot Chat, type this prompt. In Claude Code (VS Code extension or CLI), type the same prompt directly, or use `/health-check` for a guided workflow. Claude Code CLI users: run `claude` from the repo root first.
 
 ```
 Using the production-mcp server, list the top 5 services by request volume in the last hour

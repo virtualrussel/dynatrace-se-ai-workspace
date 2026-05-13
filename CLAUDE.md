@@ -34,7 +34,7 @@ When both paths can satisfy a request, prefer MCP.
 
 ## Prompts
 
-Type `@` to access these slash commands:
+Type `/` to access these slash commands:
 
 | Prompt | When to use |
 |---|---|

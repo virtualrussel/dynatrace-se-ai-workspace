@@ -126,9 +126,7 @@ Examples:
 
 Prompts define what to do, in what order, and with what guardrails.
 
-In practice, you type these prompt names directly in chat (for example, `/health-check`) to trigger the corresponding workflow.
-
-In GitHub Copilot, use `/prompt-name`; in Claude Code, use `@prompt-name`.
+In practice, type `/health-check` directly in chat to trigger the workflow — in both Copilot and Claude Code.
 
 ### How they work together
 

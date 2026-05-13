@@ -6,7 +6,7 @@ This document explains what this workspace is, how it is built, and how the comp
 
 ## What This Is
 
-A pre-configured AI observability workspace that connects GitHub Copilot or Claude Code to Dynatrace that enables natural language investigation of production systems directly from VS Code.
+A pre-configured AI observability workspace that connects GitHub Copilot or Claude Code to Dynatrace, enabling natural language investigation of production systems from VS Code or the Claude Code CLI.
 
 Instead of logging into Dynatrace, navigating dashboards, and writing queries manually, you type a slash command in Copilot Chat or Claude Code and receive structured, accurate, production-aware answers in seconds.
 
@@ -98,7 +98,7 @@ This means all 16 skills can be installed without performance penalty — Copilo
 
 ### 2. MCP Server
 **Source:** [github.com/dynatrace-oss/dynatrace-mcp](https://github.com/dynatrace-oss/dynatrace-mcp)
-**Location:** `.vscode/mcp.json`
+**Location:** `.vscode/mcp.json` (VS Code) · `.mcp.json` (Claude Code CLI and GitHub Copilot CLI)
 
 The Model Context Protocol (MCP) server is the live data bridge between Copilot and Dynatrace. When Copilot needs to answer a question about your environment, it calls the MCP server, which executes real API calls and DQL queries against your Dynatrace tenant and returns live results.
 
@@ -121,7 +121,9 @@ Authentication for a local MCP server uses OAuth browser SSO so no API tokens or
 **Source:** [github.com/Dynatrace/dynatrace-for-ai/prompts](https://github.com/Dynatrace/dynatrace-for-ai/tree/main/prompts)
 **Location:** `.github/prompts/`
 
-Prompts are pre-built investigation workflows saved as slash commands. They combine skills with structured instructions — telling Copilot what to do, in what order, and with what guardrails. Type `/` in Copilot Chat to see all available prompts.
+Prompts are pre-built investigation workflows saved as slash commands. They combine skills with structured instructions — telling the AI what to do, in what order, and with what guardrails. Type `/` in Copilot Chat or a Claude Code CLI session to see all available prompts.
+
+**Locations:** `.github/prompts/` (Copilot Chat) · `.claude/commands/` (Claude Code CLI — symlinked from `.github/prompts/`, single source of truth)
 
 | Prompt | Purpose | When to Use |
 |---|---|---|
@@ -210,6 +212,8 @@ dtctl config use-context sprint
 ---
 
 ## How It All Works Together
+
+The same flow applies in Claude Code CLI: `CLAUDE.md` is loaded in place of `copilot-instructions.md`, and `/daily-standup-notebook` is invoked from the `claude` terminal session rather than Copilot Chat.
 
 Here is the complete flow for a typical `/daily-standup-notebook` session:
 
