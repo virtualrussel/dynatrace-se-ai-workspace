@@ -37,10 +37,10 @@ dynatrace-se-ai-workspace/
 │       ├── incident-response.prompt.md
 │       └── performance-regression.prompt.md
 ├── .agents/skills/               # 16 Dynatrace domain skills
-├── .claude/skills/               # Symlinks for Claude Code compatibility
 ├── .mcp.json                     # MCP server configuration for Claude Code CLI
 ├── .claude/
 │   ├── commands/                 # Symlinked slash commands for Claude Code CLI
+│   ├── skills/                   # Symlinks to .agents/skills/ for Claude Code
 │   └── settings.local.json       # MCP server config and permissions for Claude Code
 ├── .vscode/
 │   ├── mcp.json                  # MCP server configuration for GitHub Copilot and Claude Code (VS Code extension)
@@ -147,7 +147,7 @@ to connect a second environment.
 > If you only need the shared demo tenant (`guu84124`), skip this section entirely. No additional configuration is required.
 
 Complete all four steps below to configure your own secondary tenant. Skipping
-any step will result in Copilot referencing a server that doesn't exist or
+any step will result in the AI client referencing a server that doesn't exist or
 authenticating against the wrong environment.
 
 #### Sprint Tenant Checklist

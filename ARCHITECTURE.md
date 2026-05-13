@@ -100,7 +100,7 @@ This means all 16 skills can be installed without performance penalty — the AI
 **Source:** [github.com/dynatrace-oss/dynatrace-mcp](https://github.com/dynatrace-oss/dynatrace-mcp)
 **Location:** `.vscode/mcp.json` (GitHub Copilot and Claude Code extension — VS Code) · `.mcp.json` (Claude Code CLI)
 
-The Model Context Protocol (MCP) server is the live data bridge between Copilot and Dynatrace. When Copilot needs to answer a question about your environment, it calls the MCP server, which executes real API calls and DQL queries against your Dynatrace tenant and returns live results.
+The Model Context Protocol (MCP) server is the live data bridge between AI assistants and Dynatrace. When the AI needs to answer a question about your environment, it calls the MCP server, which executes real API calls and DQL queries against your Dynatrace tenant and returns live results.
 
 Two environments are configured as named servers:
 
@@ -109,7 +109,7 @@ production-mcp  →  https://guu84124.apps.dynatrace.com        (production)
 sprint-mcp  →  https://bon05374.sprint.apps.dynatracelabs.com  (sprint)
 ```
 
-Authentication for a local MCP server uses OAuth browser SSO so no API tokens or credentials are stored in the workspace. To target a specific environment in a Copilot session:
+Authentication for a local MCP server uses OAuth browser SSO so no API tokens or credentials are stored in the workspace. To target a specific environment in an AI session:
 
 ```
 "Use the production-mcp server for all queries"
