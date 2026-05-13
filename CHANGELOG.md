@@ -3,6 +3,16 @@
 All notable changes to this workspace are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.1.2] — 2026-05-13
+
+### Fixed
+- ARCHITECTURE.md MCP section: replaced generic "Copilot" with "AI assistants" / "the AI"
+- ARCHITECTURE.md prompt locations: corrected `.claude/commands/` description from
+  "Claude Code CLI" to "Claude Code (VS Code extension and CLI)"
+- README.md Step 4: replaced generic "Copilot" with "the AI client"
+- README.md file tree: moved `.claude/skills/` inside the `.claude/` directory block
+  (was incorrectly listed as a sibling directory)
+
 ## [1.1.1] — 2026-05-13
 
 ### Fixed

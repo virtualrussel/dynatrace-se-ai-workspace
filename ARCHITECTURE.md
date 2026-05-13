@@ -123,7 +123,7 @@ Authentication for a local MCP server uses OAuth browser SSO so no API tokens or
 
 Prompts are pre-built investigation workflows saved as slash commands. They combine skills with structured instructions — telling the AI what to do, in what order, and with what guardrails. Type `/` in Copilot Chat or a Claude Code CLI session to see all available prompts.
 
-**Locations:** `.github/prompts/` (Copilot Chat) · `.claude/commands/` (Claude Code CLI — symlinked from `.github/prompts/`, single source of truth)
+**Locations:** `.github/prompts/` (Copilot Chat) · `.claude/commands/` (Claude Code — VS Code extension and CLI — symlinked from `.github/prompts/`, single source of truth)
 
 | Prompt | Purpose | When to Use |
 |---|---|---|
